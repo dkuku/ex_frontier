@@ -1,13 +1,8 @@
 defmodule FrontierSilicon.Worker do
   use Tesla
   import SweetXml
+  alias FrontierSilicon.Constants
 
-  @play_states %{
-    0 => :stopped,
-    1 => :unknown,
-    2 => :playing,
-    3 => :paused
-  }
   @url "http://192.168.1.151:80/device"
   @pin 1234
 
@@ -40,60 +35,86 @@ defmodule FrontierSilicon.Worker do
   end
 
   def get_play_info_name(conn) do
-    handle_text(conn, "netRemote.play.info.name")
+    handle_get(conn, "netRemote.play.info.name")
   end
 
   def get_play_info_text(conn) do
-    handle_text(conn, "netRemote.play.info.text")
+    handle_get(conn, "netRemote.play.info.text")
   end
 
   def get_play_info_artist(conn) do
-    handle_text(conn, "netRemote.play.info.artist")
+    handle_get(conn, "netRemote.play.info.artist")
   end
 
   def get_play_info_album(conn) do
-    handle_text(conn, "netRemote.play.info.album")
+    handle_get(conn, "netRemote.play.info.album")
   end
 
   def get_play_info_graphics(conn) do
-    handle_text(conn, "netRemote.play.info.graphicUri")
+    handle_get(conn, "netRemote.play.info.graphicUri")
   end
 
   def get_volume_steps(conn) do
-    handle_int(conn, "netRemote.sys.caps.volumeSteps")
+    handle_get(conn, "netRemote.sys.caps.volumeSteps")
   end
 
   def get_play_status(conn) do
-    status = handle_int(conn, "netRemote.play.status")
-    @play_states[status]
+    status = handle_get(conn, "netRemote.play.status")
+    @net_remoet_play_states[status]
   end
 
   def get_volume(conn) do
-    handle_int(conn, "netRemote.sys.audio.volume")
+    handle_get(conn, "netRemote.sys.audio.volume")
   end
 
   def get_mute(conn) do
-    handle_int(conn, "netRemote.sys.audio.mute")
+    handle_get(conn, "netRemote.sys.audio.mute")
   end
 
   def get_power(conn) do
-    handle_int(conn, "netRemote.sys.power")
+    handle_get(conn, "netRemote.sys.power")
   end
 
   def get_friendly_name(conn) do
-    handle_text(conn, "netRemote.sys.info.friendlyName")
+    handle_get(conn, "netRemote.sys.info.friendlyName")
   end
 
   def get_duration(conn) do
     with duration when is_integer(duration) <-
-           handle_long(conn, "netRemote.play.info.duration") do
+           handle_get(conn, "netRemote.play.info.duration") do
       Time.add(~T[00:00:00], duration, :millisecond)
     end
   end
 
   def get_mode(conn) do
-    mode = handle_long(conn, "netRemote.sys.mode")
+    mode = handle_get(conn, "netRemote.sys.mode")
     Enum.find(get_modes(conn), fn %{key: key} -> key == mode end)
+  end
+
+  def get_eq_modes(conn) do
+    handle_list(conn, "netRemote.sys.caps.eqPresets")
+    |> xpath(~x"/fsapiResponse/item"l)
+    |> Enum.map(fn item ->
+      xmap(item,
+        key: ~x"/item/@key"i,
+        label: ~x"/item/field[@name=\"label\"]/c8_array/text()"s
+      )
+    end)
+  end
+
+  def get_wifi_scan(conn) do
+    handle_list(conn, "netRemote.sys.net.wlan.scanList")
+    |> xpath(~x"/fsapiResponse/item"l)
+    |> Enum.map(fn item ->
+      xmap(item,
+        key: ~x"/item/@key"i,
+        privacy: ~x"/item/field[@name=\"privacy\"]/u8/text()"i,
+        wpscapability: ~x"/item/field[@name=\"wpscapability\"]/u8/text()"i,
+        ssid:
+          ~x"/item/field[@name=\"ssid\"]/array/text()"s
+          |> transform_by(&Base.decode16!(String.upcase(&1)))
+      )
+    end)
   end
 
   def get_modes(conn) do
@@ -112,12 +133,9 @@ defmodule FrontierSilicon.Worker do
   end
 
   def disconnect(conn) do
-    doc = call(conn, "DELETE_SESSION")
+    response = call(conn, "DELETE_SESSION")
 
-    case xpath(doc, ~x"/fsapiResponse/status/text()"s) do
-      "FS_OK" -> :ok
-      _ -> :error
-    end
+    Constants.get_response_status(response)
   end
 
   def play(conn) do
@@ -164,38 +182,31 @@ defmodule FrontierSilicon.Worker do
     call(conn, "LIST_GET_NEXT/#{item}/-1", %{"maxItems" => 100})
   end
 
-  def handle_text(conn, item) do
-    conn
-    |> handle_get(item)
-    |> xpath(~x"/fsapiResponse/value/c8_array/text()"s)
-  end
-
-  def handle_int(conn, item) do
-    conn
-    |> handle_get(item)
-    |> xpath(~x"/fsapiResponse/value/u8/text()"i)
-  end
-
-  def handle_long(conn, item) do
-    conn
-    |> handle_get(item)
-    |> xpath(~x"/fsapiResponse/value/u32/text()"i)
-  end
-
   def handle_get(conn, item) do
-    call(conn, "GET/#{item}")
+    with response = call(conn, "GET/#{item}"),
+         :ok <- Constants.get_response_status(response),
+         type = Constants.get_response_type(response),
+         raw_value = Constants.parse_response(response, type),
+         value = Constants.postprocess_response(raw_value, type, item) do
+      value
+    else
+      {:error, error} -> error
+    end
   end
 
   def handle_set(conn, item, true), do: handle_set(conn, item, 1)
   def handle_set(conn, item, false), do: handle_set(conn, item, 0)
-  def handle_set(conn, item, value) do
-    doc = call(conn, "SET/#{item}", %{value: value})
 
-    case xpath(doc, ~x"/fsapiResponse/status/text()"s) do
-      "FS_OK" -> :ok
-      _ -> 
-        IO.inspect(doc)
-        :error
+  def handle_set(conn, item, value) do
+    response = call(conn, "SET/#{item}", %{value: value})
+
+    case Constants.get_response_status(response) do
+      :ok ->
+        :ok
+
+      {:error, error} ->
+        IO.inspect(response)
+        error
     end
   end
 
