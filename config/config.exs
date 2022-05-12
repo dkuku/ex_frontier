@@ -7,6 +7,7 @@
 # General application configuration
 import Config
 config :tesla, adapter: Tesla.Adapter.Hackney
+
 config :ex_assistant,
   ecto_repos: [ExAssistant.Repo]
 

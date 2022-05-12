@@ -151,21 +151,22 @@ defmodule FrontierSilicon.Worker do
 
   def handle_list(conn, item) do
     with response = call(conn, "LIST_GET_NEXT/#{item}/-1", %{"maxItems" => 100}),
-         :ok <- Constants.get_response_status(response) do
-      xmap(response,
-        items: [
-          ~x"/fsapiResponse/item"l,
-          key: ~x"./@key"i,
-          fields: [
-            ~x"./field"l,
-            key: ~x"./@name"s,
-            value: ~x"./*[1]/text()"s,
-            type: ~x"./*" |> transform_by(&elem(&1, 1))
-          ]
-        ]
-      )
-      |> Map.get(:items)
-      |> Enum.map(
+         :ok <- Constants.get_response_status(response),
+         %{items: items} =
+           xmap(response,
+             items: [
+               ~x"/fsapiResponse/item"l,
+               key: ~x"./@key"i,
+               fields: [
+                 ~x"./field"l,
+                 key: ~x"./@name"s,
+                 value: ~x"./*[1]/text()"s,
+                 type: ~x"./*" |> transform_by(&elem(&1, 1))
+               ]
+             ]
+           ) do
+      Enum.map(
+        items,
         &Enum.reduce(&1.fields, %{"key" => &1.key}, fn %{key: key, value: value}, acc ->
           Map.put(acc, key, value)
         end)

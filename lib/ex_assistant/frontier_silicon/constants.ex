@@ -1,5 +1,6 @@
 defmodule FrontierSilicon.Constants do
   import SweetXml
+
   @net_remote_play_states %{
     0 => :stopped,
     1 => :unknown,
@@ -117,7 +118,7 @@ defmodule FrontierSilicon.Constants do
   netRemote.sys.net.wlan.setEncType
   netRemote.sys.net.wlan.setSSID
   netRemote.sys.power
-  netRemote.sys.rsa.publicKey
+  netRemote.sys.rsa.publicKey___
   netRemote.sys.rsa.status
   netRemote.sys.sleep
   netRemote.sys.wlan.regionfcc
@@ -169,8 +170,9 @@ defmodule FrontierSilicon.Constants do
   def get(), do: @get
   def set(), do: @set
   def list(), do: @list
-  
+
   def postprocess_response(value, :array, _item), do: Base.decode16!(String.upcase(value))
+
   def postprocess_response(value, _, "netRemote.sys.net.ipConfig." <> item) when item != "dhcp",
     do: int_to_ip(value)
 
@@ -192,6 +194,7 @@ defmodule FrontierSilicon.Constants do
 
     xpath(response, xpath)
   end
+
   def get_response_status(response) do
     case xpath(response, ~x"/fsapiResponse/status/text()"s) do
       "FS_OK" -> :ok
