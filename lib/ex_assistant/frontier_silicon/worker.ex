@@ -93,43 +93,14 @@ defmodule FrontierSilicon.Worker do
 
   def get_eq_modes(conn) do
     handle_list(conn, "netRemote.sys.caps.eqPresets")
-    |> xpath(~x"/fsapiResponse/item"l)
-    |> Enum.map(fn item ->
-      xmap(item,
-        key: ~x"/item/@key"i,
-        label: ~x"/item/field[@name=\"label\"]/c8_array/text()"s
-      )
-    end)
   end
 
   def get_wifi_scan(conn) do
     handle_list(conn, "netRemote.sys.net.wlan.scanList")
-    |> xpath(~x"/fsapiResponse/item"l)
-    |> Enum.map(fn item ->
-      xmap(item,
-        key: ~x"/item/@key"i,
-        privacy: ~x"/item/field[@name=\"privacy\"]/u8/text()"i,
-        wpscapability: ~x"/item/field[@name=\"wpscapability\"]/u8/text()"i,
-        ssid:
-          ~x"/item/field[@name=\"ssid\"]/array/text()"s
-          |> transform_by(&Base.decode16!(String.upcase(&1)))
-      )
-    end)
   end
 
   def get_modes(conn) do
     handle_list(conn, "netRemote.sys.caps.validModes")
-    |> xpath(~x"/fsapiResponse/item"l)
-    |> Enum.map(fn item ->
-      xmap(item,
-        key: ~x"/item/@key"i,
-        id: ~x"/item/field[@name=\"id\"]/c8_array/text()"s,
-        label: ~x"/item/field[@name=\"label\"]/c8_array/text()"s,
-        selectable: ~x"/item/field[@name=\"selectable\"]/u8/text()"i,
-        streamable: ~x"/item/field[@name=\"streamable\"]/u8/text()"i,
-        modetype: ~x"/item/field[@name=\"modetype\"]/u8/text()"i
-      )
-    end)
   end
 
   def disconnect(conn) do
@@ -179,7 +150,29 @@ defmodule FrontierSilicon.Worker do
   end
 
   def handle_list(conn, item) do
-    call(conn, "LIST_GET_NEXT/#{item}/-1", %{"maxItems" => 100})
+    with response = call(conn, "LIST_GET_NEXT/#{item}/-1", %{"maxItems" => 100}),
+         :ok <- Constants.get_response_status(response) do
+      xmap(response,
+        items: [
+          ~x"/fsapiResponse/item"l,
+          key: ~x"./@key"i,
+          fields: [
+            ~x"./field"l,
+            key: ~x"./@name"s,
+            value: ~x"./*[1]/text()"s,
+            type: ~x"./*" |> transform_by(&elem(&1, 1))
+          ]
+        ]
+      )
+      |> Map.get(:items)
+      |> Enum.map(
+        &Enum.reduce(&1.fields, %{"key" => &1.key}, fn %{key: key, value: value}, acc ->
+          Map.put(acc, key, value)
+        end)
+      )
+    else
+      {:error, error} -> error
+    end
   end
 
   def handle_get(conn, item) do

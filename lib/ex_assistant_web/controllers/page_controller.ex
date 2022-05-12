@@ -21,7 +21,9 @@ defmodule ExAssistantWeb.PageController do
 
   defp get_list(connection, param) do
     try do
-      FrontierSilicon.Worker.handle_list(connection, param)
+      connection
+      |> FrontierSilicon.Worker.handle_list(param)
+      |> inspect()
     rescue
       error ->
         IO.inspect(error)

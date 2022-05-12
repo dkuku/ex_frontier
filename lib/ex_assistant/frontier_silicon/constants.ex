@@ -193,7 +193,6 @@ defmodule FrontierSilicon.Constants do
     xpath(response, xpath)
   end
   def get_response_status(response) do
-    
     case xpath(response, ~x"/fsapiResponse/status/text()"s) do
       "FS_OK" -> :ok
       "FS_FAIL" -> {:error, :fail}
