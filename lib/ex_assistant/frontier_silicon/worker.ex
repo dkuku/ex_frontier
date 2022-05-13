@@ -152,28 +152,37 @@ defmodule FrontierSilicon.Worker do
   def handle_list(conn, item) do
     with response = call(conn, "LIST_GET_NEXT/#{item}/-1", %{"maxItems" => 100}),
          :ok <- Constants.get_response_status(response),
-         %{items: items} =
-           xmap(response,
-             items: [
-               ~x"/fsapiResponse/item"l,
-               key: ~x"./@key"i,
-               fields: [
-                 ~x"./field"l,
-                 key: ~x"./@name"s,
-                 value: ~x"./*[1]/text()"s,
-                 type: ~x"./*" |> transform_by(&elem(&1, 1))
-               ]
-             ]
-           ) do
+         {:ok, list} <- parse_list(response) do
+      list
+    else
+      {:error, error} -> error
+    end
+  end
+
+  def parse_list(response) do
+    %{items: items} =
+      xmap(response,
+        items: [
+          ~x"/fsapiResponse/item"l,
+          key: ~x"./@key"i,
+          fields: [
+            ~x"./field"l,
+            key: ~x"./@name"s,
+            value: ~x"./*[1]/text()"s,
+            type: ~x"./*" |> transform_by(&elem(&1, 1))
+          ]
+        ]
+      )
+
+    parsed_list =
       Enum.map(
         items,
         &Enum.reduce(&1.fields, %{"key" => &1.key}, fn %{key: key, value: value}, acc ->
           Map.put(acc, key, value)
         end)
       )
-    else
-      {:error, error} -> error
-    end
+
+    {:ok, parsed_list}
   end
 
   def handle_get(conn, item) do
@@ -199,7 +208,7 @@ defmodule FrontierSilicon.Worker do
         :ok
 
       {:error, error} ->
-        IO.inspect(response)
+        IO.inspect(response, label: inspect(error))
         error
     end
   end

@@ -51,7 +51,8 @@ defmodule ExAssistant.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:tesla, "~> 1.4"},
       {:hackney, "~> 1.17"},
-      {:sweet_xml, "~> 0.7.1"}
+      {:sweet_xml, "~> 0.7.1"},
+      {:assert_value, ">= 0.0.0", only: [:dev, :test]}
     ]
   end
 
