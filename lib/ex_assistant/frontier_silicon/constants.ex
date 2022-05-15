@@ -1,6 +1,4 @@
 defmodule FrontierSilicon.Constants do
-  import SweetXml
-
   @net_remote_play_states %{
     0 => :stopped,
     1 => :unknown,
@@ -171,61 +169,22 @@ defmodule FrontierSilicon.Constants do
   def set(), do: @set
   def list(), do: @list
 
-  def net_remote_play_states(state) do
-    @net_remote_play_states[state]
-  end
+  def net_remote_play_states(key), do: @net_remote_play_states[key]
 
-  def postprocess_response(value, :array, _item), do: Base.decode16!(String.upcase(value))
+  def net_remote_clock_source(key), do: @net_remote_clock_source[key]
 
-  def postprocess_response(value, _, "netRemote.sys.net.ipConfig." <> item) when item != "dhcp",
-    do: int_to_ip(value)
+  def net_remote_time_mode(key), do: @net_remote_time_mode[key]
 
-  def postprocess_response(value, _, _), do: value
+  def net_remote_wifi_scan(key), do: @net_remote_wifi_scan[key]
 
-  def parse_value(response) do
-    xpath = get_xpath_by_type(response)
-    xpath(response, xpath)
-  end
+  def net_remote_auth(key), do: @net_remote_auth[key]
 
-  def get_response_status(response) do
-    case xpath(response, ~x"/fsapiResponse/status/text()"s) do
-      "FS_OK" -> :ok
-      "FS_FAIL" -> {:error, :fail}
-      "FS_PACKET_BAD" -> {:error, :bad_packet}
-      "FS_NODE_DOES_NOT_EXIST" -> {:error, :not_exist}
-      "FS_NODE_BLOCKED" -> {:error, :blocked}
-      "FS_TIMEOUT" -> {:error, :timeout}
-      "FS_LIST_END" -> {:error, :list_end}
-    end
-  end
+  def net_remots_encr(key), do: @net_remots_encr[key]
 
-  def get_response_type(response) do
-    response
-    |> xpath(~x"./*")
-    |> elem(1)
-  end
+  def net_remote_isu_state(key), do: @net_remote_isu_state[key]
 
-  defp get_xpath_by_type(response) do
-    case get_response_type(response) do
-      :u8 -> ~x"./u8/text()"i
-      :u16 -> ~x"./u16/text()"i
-      :u32 -> ~x"./u32/text()"i
-      :s8 -> ~x"./s8/text()"i
-      :s16 -> ~x"./s16/text()"i
-      :s32 -> ~x"./s32/text()"i
-      :c8_array -> ~x"./c8_array/text()"s
-      :array -> ~x"./array/text()"s
-      _ -> IO.inspect(response, label: :unsupported_response)
-    end
-  end
+  def net_remote_isu_control(key), do: @net_remote_isu_control[key]
 
-  def int_to_ip(ip_int) do
-    [
-      div(ip_int, 16_777_216),
-      rem(div(ip_int, 65536), 256),
-      rem(div(ip_int, 256), 256),
-      rem(ip_int, 256)
-    ]
-    |> Enum.join(".")
-  end
+  def net_remote_rsa_status(key), do: @net_remote_rsa_status[key]
+
 end

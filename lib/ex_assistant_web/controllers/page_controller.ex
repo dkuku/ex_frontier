@@ -3,7 +3,7 @@ defmodule ExAssistantWeb.PageController do
   alias FrontierSilicon.Constants
 
   def index(conn, _params) do
-    connection = FrontierSilicon.Worker.connect()
+    connection = FrontierSilicon.Connector.connect()
 
     params =
       Constants.get()
@@ -23,7 +23,7 @@ defmodule ExAssistantWeb.PageController do
   defp get_list(connection, param) do
     try do
       connection
-      |> FrontierSilicon.Worker.handle_list(param)
+      |> FrontierSilicon.Connector.handle_list(param)
       |> Jason.encode!(pretty: true)
     rescue
       error ->
@@ -34,7 +34,7 @@ defmodule ExAssistantWeb.PageController do
 
   defp get_param(connection, param) do
     try do
-      FrontierSilicon.Worker.handle_get(connection, param)
+      FrontierSilicon.Connector.handle_get(connection, param)
     rescue
       error ->
         IO.inspect(error)

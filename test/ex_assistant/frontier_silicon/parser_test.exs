@@ -1,8 +1,8 @@
-defmodule ExAssistant.FrontierSilicon.WorkerTest do
+defmodule ExAssistant.FrontierSilicon.ParserTest do
   use ExUnit.Case, async: true
 
   import AssertValue
-  alias FrontierSilicon.Worker
+  alias FrontierSilicon.Parser
 
   describe "parse_list/2" do
     test "Deezer response" do
@@ -37,7 +37,7 @@ defmodule ExAssistant.FrontierSilicon.WorkerTest do
       </fsapiResponse>
       """
 
-      assert {:ok, list} = Worker.parse_list(response)
+      assert {:ok, list} = Parser.parse_list(response)
 
       assert_value list == [
                      %{
@@ -86,7 +86,7 @@ defmodule ExAssistant.FrontierSilicon.WorkerTest do
       </fsapiResponse>
       """
 
-      assert {:ok, list} = Worker.parse_list(response)
+      assert {:ok, list} = Parser.parse_list(response)
 
       assert_value list == [
                      %{"key" => 0, "name" => "The Game Is On", "type" => "Deezer"},
@@ -114,7 +114,7 @@ defmodule ExAssistant.FrontierSilicon.WorkerTest do
       </fsapiResponse>
       """
 
-      assert {:ok, list} = Worker.parse_list(response)
+      assert {:ok, list} = Parser.parse_list(response)
 
       assert_value list == [
                      %{"key" => 0, "label" => "Normal"},
@@ -144,7 +144,7 @@ defmodule ExAssistant.FrontierSilicon.WorkerTest do
       </fsapiResponse>
       """
 
-      assert {:ok, list} = Worker.parse_list(response)
+      assert {:ok, list} = Parser.parse_list(response)
 
       assert_value list == [
                      %{"key" => 0, "langlabel" => "English"},
@@ -176,7 +176,7 @@ defmodule ExAssistant.FrontierSilicon.WorkerTest do
       </fsapiResponse>
       """
 
-      assert {:ok, list} = Worker.parse_list(response)
+      assert {:ok, list} = Parser.parse_list(response)
 
       assert_value list == [
                      %{
@@ -208,7 +208,7 @@ defmodule ExAssistant.FrontierSilicon.WorkerTest do
       </fsapiResponse>
       """
 
-      assert {:ok, list} = Worker.parse_response(response)
+      assert {:ok, list} = Parser.parse_response(response)
       assert_value list == "00:22:61:f6:d6:62"
     end
 
@@ -220,7 +220,7 @@ defmodule ExAssistant.FrontierSilicon.WorkerTest do
       </fsapiResponse>
       """
 
-      assert {:ok, list} = Worker.parse_response(response)
+      assert {:ok, list} = Parser.parse_response(response)
       assert_value list == 8
     end
 
@@ -232,7 +232,7 @@ defmodule ExAssistant.FrontierSilicon.WorkerTest do
       </fsapiResponse>
       """
 
-      assert {:ok, list} = Worker.parse_response(response)
+      assert {:ok, list} = Parser.parse_response(response)
       assert_value list == 4_294_967_040
     end
 
@@ -244,7 +244,7 @@ defmodule ExAssistant.FrontierSilicon.WorkerTest do
       </fsapiResponse>
       """
 
-      assert {:ok, list} = Worker.parse_response(response)
+      assert {:ok, list} = Parser.parse_response(response)
       assert_value list == 64
     end
   end

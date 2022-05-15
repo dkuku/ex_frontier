@@ -1,27 +1,17 @@
-defmodule FrontierSilicon.Worker do
+defmodule FrontierSilicon.Connector do
   use Tesla
-  import SweetXml
   alias FrontierSilicon.Constants
+  alias FrontierSilicon.Parser
 
   @url "http://192.168.1.151:80/device"
   @pin 1234
-
-  plug Tesla.Middleware.JSON
 
   def connect do
     {:ok, %{body: body}} = get(@url)
 
     body
-    |> parse_connect()
+    |> Parser.parse_connect()
     |> append_session()
-  end
-
-  defp parse_connect(body) do
-    %{
-      friendly_name: xpath(body, ~x"/netRemote/friendlyName/text()"s),
-      version: xpath(body, ~x"/netRemote/version/text()"s),
-      webfsapi: xpath(body, ~x"/netRemote/webfsapi/text()"s)
-    }
   end
 
   def append_session(conn) do
@@ -31,9 +21,9 @@ defmodule FrontierSilicon.Worker do
       |> Kernel.<>("?" <> URI.encode_query(%{pin: @pin}))
       |> get()
 
-    Map.put(conn, :session_id, xpath(body, ~x"/fsapiResponse/sessionId/text()"s))
+    session_id = Parser.get_session_id(body)
+    Map.put(conn, :session_id, session_id)
   end
-
   def get_play_info_name(conn) do
     handle_get(conn, "netRemote.play.info.name")
   end
@@ -106,7 +96,7 @@ defmodule FrontierSilicon.Worker do
   def disconnect(conn) do
     response = call(conn, "DELETE_SESSION")
 
-    Constants.get_response_status(response)
+    Parser.get_response_status(response)
   end
 
   def play(conn) do
@@ -151,58 +141,21 @@ defmodule FrontierSilicon.Worker do
 
   def handle_list(conn, item) do
     with response = call(conn, "LIST_GET_NEXT/#{item}/-1", %{"maxItems" => 100}),
-         :ok <- Constants.get_response_status(response),
-         {:ok, list} <- parse_list(response) do
+         :ok <- Parser.get_response_status(response),
+         {:ok, list} <- Parser.parse_list(response) do
       list
     else
       {:error, error} -> error
     end
   end
 
-  def parse_list(response) do
-    %{items: items} =
-      xmap(response,
-        items: [
-          ~x"/fsapiResponse/item"l,
-          key: ~x"./@key"i,
-          fields: [
-            ~x"./field"l,
-            key: ~x"./@name"s,
-            value: ~x"./*[1]/text()"s,
-            type: ~x"./*" |> transform_by(&elem(&1, 1))
-          ]
-        ]
-      )
-
-    parsed_list =
-      Enum.map(
-        items,
-        &Enum.reduce(&1.fields, %{"key" => &1.key}, fn %{key: key, value: value, type: type},
-                                                       acc ->
-          case type do
-            :c8_array -> Map.put(acc, key, value)
-            :array -> Base.decode16!(String.upcase(value))
-            _ -> Map.put(acc, key, String.to_integer(value))
-          end
-        end)
-      )
-
-    {:ok, parsed_list}
-  end
-
-  def parse_response(response) do
-    {:ok,
-     response
-     |> xpath(~x"/fsapiResponse/value")
-     |> Constants.parse_value()}
-  end
 
   def handle_get(conn, item) do
     with response = call(conn, "GET/#{item}"),
-         :ok <- Constants.get_response_status(response),
-         type = Constants.get_response_type(response),
-         {:ok, raw_value} = parse_response(response),
-         value = Constants.postprocess_response(raw_value, type, item) do
+         :ok <- Parser.get_response_status(response),
+         type = Parser.get_response_type(response),
+         {:ok, raw_value} = Parser.parse_response(response),
+         value = Parser.postprocess_response(raw_value, type, item) do
       value
     else
       {:error, error} -> error
@@ -215,7 +168,7 @@ defmodule FrontierSilicon.Worker do
   def handle_set(conn, item, value) do
     response = call(conn, "SET/#{item}", %{value: value})
 
-    case Constants.get_response_status(response) do
+    case Parser.get_response_status(response) do
       :ok ->
         :ok
 
