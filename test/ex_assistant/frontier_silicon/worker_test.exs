@@ -38,33 +38,34 @@ defmodule ExAssistant.FrontierSilicon.WorkerTest do
       """
 
       assert {:ok, list} = Worker.parse_list(response)
+
       assert_value list == [
                      %{
                        "artist" => "",
-                       "contextmenu" => "0",
+                       "contextmenu" => 0,
                        "graphicuri" => "",
                        "key" => 0,
                        "name" => "Flow",
-                       "subtype" => "3",
-                       "type" => "1"
+                       "subtype" => 3,
+                       "type" => 1
                      },
                      %{
                        "artist" => "",
-                       "contextmenu" => "0",
+                       "contextmenu" => 0,
                        "graphicuri" => "",
                        "key" => 1,
                        "name" => "Charts",
-                       "subtype" => "0",
-                       "type" => "0"
+                       "subtype" => 0,
+                       "type" => 0
                      },
                      %{
                        "artist" => "",
-                       "contextmenu" => "0",
+                       "contextmenu" => 0,
                        "graphicuri" => "",
                        "key" => 2,
                        "name" => "Recommendations",
-                       "subtype" => "0",
-                       "type" => "0"
+                       "subtype" => 0,
+                       "type" => 0
                      }
                    ]
     end
@@ -86,6 +87,7 @@ defmodule ExAssistant.FrontierSilicon.WorkerTest do
       """
 
       assert {:ok, list} = Worker.parse_list(response)
+
       assert_value list == [
                      %{"key" => 0, "name" => "The Game Is On", "type" => "Deezer"},
                      %{"key" => 1, "name" => "", "type" => ""}
@@ -113,6 +115,7 @@ defmodule ExAssistant.FrontierSilicon.WorkerTest do
       """
 
       assert {:ok, list} = Worker.parse_list(response)
+
       assert_value list == [
                      %{"key" => 0, "label" => "Normal"},
                      %{"key" => 1, "label" => "Flat"},
@@ -142,6 +145,7 @@ defmodule ExAssistant.FrontierSilicon.WorkerTest do
       """
 
       assert {:ok, list} = Worker.parse_list(response)
+
       assert_value list == [
                      %{"key" => 0, "langlabel" => "English"},
                      %{"key" => 1, "langlabel" => "Danish"},
@@ -173,24 +177,75 @@ defmodule ExAssistant.FrontierSilicon.WorkerTest do
       """
 
       assert {:ok, list} = Worker.parse_list(response)
+
       assert_value list == [
                      %{
                        "id" => "IR",
                        "key" => 0,
                        "label" => "Internet radio",
-                       "modetype" => "0",
-                       "selectable" => "1",
-                       "streamable" => "1"
+                       "modetype" => 0,
+                       "selectable" => 1,
+                       "streamable" => 1
                      },
                      %{
                        "id" => "AIRABLE_TIDAL",
                        "key" => 1,
                        "label" => "TIDAL",
-                       "modetype" => "0",
-                       "selectable" => "1",
-                       "streamable" => "1"
+                       "modetype" => 0,
+                       "selectable" => 1,
+                       "streamable" => 1
                      }
                    ]
+    end
+  end
+
+  describe "handle_get" do
+    test "c8_array" do
+      response = """
+      <fsapiResponse>
+      <status>FS_OK</status>
+      <value><c8_array>00:22:61:f6:d6:62</c8_array></value>
+      </fsapiResponse>
+      """
+
+      assert {:ok, list} = Worker.parse_response(response)
+      assert_value list == "00:22:61:f6:d6:62"
+    end
+
+    test "s32" do
+      response = """
+      <fsapiResponse>
+      <status>FS_OK</status>
+      <value><s32>8</s32></value>
+      </fsapiResponse>
+      """
+
+      assert {:ok, list} = Worker.parse_response(response)
+      assert_value list == 8
+    end
+
+    test "u32" do
+      response = """
+      <fsapiResponse>
+      <status>FS_OK</status>
+      <value><u32>4294967040</u32></value>
+      </fsapiResponse>
+      """
+
+      assert {:ok, list} = Worker.parse_response(response)
+      assert_value list == 4_294_967_040
+    end
+
+    test "u8" do
+      response = """
+      <fsapiResponse>
+      <status>FS_OK</status>
+      <value><u8>64</u8></value>
+      </fsapiResponse>
+      """
+
+      assert {:ok, list} = Worker.parse_response(response)
+      assert_value list == 64
     end
   end
 end

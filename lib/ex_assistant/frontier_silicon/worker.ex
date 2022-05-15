@@ -60,7 +60,7 @@ defmodule FrontierSilicon.Worker do
 
   def get_play_status(conn) do
     status = handle_get(conn, "netRemote.play.status")
-    @net_remoet_play_states[status]
+    Constants.net_remote_play_states(status)
   end
 
   def get_volume(conn) do
@@ -177,19 +177,31 @@ defmodule FrontierSilicon.Worker do
     parsed_list =
       Enum.map(
         items,
-        &Enum.reduce(&1.fields, %{"key" => &1.key}, fn %{key: key, value: value}, acc ->
-          Map.put(acc, key, value)
+        &Enum.reduce(&1.fields, %{"key" => &1.key}, fn %{key: key, value: value, type: type},
+                                                       acc ->
+          case type do
+            :c8_array -> Map.put(acc, key, value)
+            :array -> Base.decode16!(String.upcase(value))
+            _ -> Map.put(acc, key, String.to_integer(value))
+          end
         end)
       )
 
     {:ok, parsed_list}
   end
 
+  def parse_response(response) do
+    {:ok,
+     response
+     |> xpath(~x"/fsapiResponse/value")
+     |> Constants.parse_value()}
+  end
+
   def handle_get(conn, item) do
     with response = call(conn, "GET/#{item}"),
          :ok <- Constants.get_response_status(response),
          type = Constants.get_response_type(response),
-         raw_value = Constants.parse_response(response, type),
+         {:ok, raw_value} = parse_response(response),
          value = Constants.postprocess_response(raw_value, type, item) do
       value
     else

@@ -171,6 +171,10 @@ defmodule FrontierSilicon.Constants do
   def set(), do: @set
   def list(), do: @list
 
+  def net_remote_play_states(state) do
+    @net_remote_play_states[state]
+  end
+
   def postprocess_response(value, :array, _item), do: Base.decode16!(String.upcase(value))
 
   def postprocess_response(value, _, "netRemote.sys.net.ipConfig." <> item) when item != "dhcp",
@@ -178,20 +182,8 @@ defmodule FrontierSilicon.Constants do
 
   def postprocess_response(value, _, _), do: value
 
-  def parse_response(response, type) do
-    xpath =
-      case type do
-        :u8 -> ~x"/fsapiResponse/value/u8/text()"i
-        :u16 -> ~x"/fsapiResponse/value/u16/text()"i
-        :u32 -> ~x"/fsapiResponse/value/u32/text()"i
-        :s8 -> ~x"/fsapiResponse/value/s8/text()"i
-        :s16 -> ~x"/fsapiResponse/value/s16/text()"i
-        :s32 -> ~x"/fsapiResponse/value/s32/text()"i
-        :c8_array -> ~x"/fsapiResponse/value/c8_array/text()"s
-        :array -> ~x"/fsapiResponse/value/array/text()"s
-        _ -> IO.inspect(response, label: :unsupported_response)
-      end
-
+  def parse_value(response) do
+    xpath = get_xpath_by_type(response)
     xpath(response, xpath)
   end
 
@@ -209,8 +201,22 @@ defmodule FrontierSilicon.Constants do
 
   def get_response_type(response) do
     response
-    |> xpath(~x"/fsapiResponse/value/*")
+    |> xpath(~x"./*")
     |> elem(1)
+  end
+
+  defp get_xpath_by_type(response) do
+    case get_response_type(response) do
+      :u8 -> ~x"./u8/text()"i
+      :u16 -> ~x"./u16/text()"i
+      :u32 -> ~x"./u32/text()"i
+      :s8 -> ~x"./s8/text()"i
+      :s16 -> ~x"./s16/text()"i
+      :s32 -> ~x"./s32/text()"i
+      :c8_array -> ~x"./c8_array/text()"s
+      :array -> ~x"./array/text()"s
+      _ -> IO.inspect(response, label: :unsupported_response)
+    end
   end
 
   def int_to_ip(ip_int) do
