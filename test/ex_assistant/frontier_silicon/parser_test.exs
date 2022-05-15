@@ -248,4 +248,10 @@ defmodule ExAssistant.FrontierSilicon.ParserTest do
       assert_value list == 64
     end
   end
+
+  test "int_to_ip" do
+  assert_value Parser.int_to_ip(3_232_235_927) == "192.168.1.151"
+  assert_value Parser.int_to_ip(3_232_235_777) == "192.168.1.1"
+  assert_value Parser.int_to_ip(4_294_967_040) == "255.255.255.0"
+  end
 end

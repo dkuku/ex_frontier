@@ -45,12 +45,10 @@ defmodule FrontierSilicon.Parser do
   end
 
   def int_to_ip(ip_int) do
-    [
-      div(ip_int, 16_777_216),
-      rem(div(ip_int, 65536), 256),
-      rem(div(ip_int, 256), 256),
-      rem(ip_int, 256)
-    ]
+    IO.inspect(ip_int)
+    0..3
+    |> Enum.map(&rem(div(ip_int, floor(:math.pow(256, &1))), 256))
+    |> Enum.reverse()
     |> Enum.join(".")
   end
   def get_session_id(body) do
