@@ -8,8 +8,10 @@ defmodule ExAssistantWeb.PageController do
     params =
       Constants.get()
       |> String.split("\n", trim: true)
+      |> Enum.chunk_every(10)
+      |> Enum.flat_map(&get_params(&1, connection))
       |> Enum.with_index()
-      |> Enum.map(fn {param, index} -> {index, param, get_param(connection, param)} end)
+      |> Enum.map(fn {{k, v}, index} -> {index, k, v} end)
 
     lists =
       Constants.list()
@@ -24,7 +26,6 @@ defmodule ExAssistantWeb.PageController do
     try do
       connection
       |> FrontierSilicon.Connector.handle_list(param)
-      |> Jason.encode!(pretty: true)
     rescue
       error ->
         IO.inspect(error)
@@ -32,12 +33,18 @@ defmodule ExAssistantWeb.PageController do
     end
   end
 
-  defp get_param(connection, param) do
+  defp get_params(params, connection) do
     try do
-      FrontierSilicon.Connector.handle_get(connection, param)
+      {:ok, params} =
+        connection
+        |> FrontierSilicon.Connector.handle_get_multiple(params)
+        |> FrontierSilicon.Parser.parse_get_multiple()
+
+      params
     rescue
       error ->
         IO.inspect(error)
+        IO.inspect(__STACKTRACE__)
         :error
     end
   end

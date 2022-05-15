@@ -186,5 +186,4 @@ defmodule FrontierSilicon.Constants do
   def net_remote_isu_control(key), do: @net_remote_isu_control[key]
 
   def net_remote_rsa_status(key), do: @net_remote_rsa_status[key]
-
 end

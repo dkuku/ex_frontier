@@ -13,7 +13,12 @@ defmodule FrontierSilicon.Parser do
   end
 
   def get_response_status(response) do
-    case xpath(response, ~x"/fsapiResponse/status/text()"s) do
+    status = xpath(response, ~x"/fsapiResponse/status/text()"s)
+    get_status(status)
+  end
+
+  def get_status(status) do
+    case status do
       "FS_OK" -> :ok
       "FS_FAIL" -> {:error, :fail}
       "FS_PACKET_BAD" -> {:error, :bad_packet}
@@ -45,12 +50,12 @@ defmodule FrontierSilicon.Parser do
   end
 
   def int_to_ip(ip_int) do
-    IO.inspect(ip_int)
     0..3
     |> Enum.map(&rem(div(ip_int, floor(:math.pow(256, &1))), 256))
     |> Enum.reverse()
     |> Enum.join(".")
   end
+
   def get_session_id(body) do
     xpath(body, ~x"/fsapiResponse/sessionId/text()"s)
   end
@@ -83,11 +88,7 @@ defmodule FrontierSilicon.Parser do
         items,
         &Enum.reduce(&1.fields, %{"key" => &1.key}, fn %{key: key, value: value, type: type},
                                                        acc ->
-          case type do
-            :c8_array -> Map.put(acc, key, value)
-            :array -> Base.decode16!(String.upcase(value))
-            _ -> Map.put(acc, key, String.to_integer(value))
-          end
+          Map.put(acc, key, parse_by_type(value, type))
         end)
       )
 
@@ -100,4 +101,43 @@ defmodule FrontierSilicon.Parser do
      |> xpath(~x"/fsapiResponse/value")
      |> parse_value()}
   end
+
+  def parse_get_multiple(response) do
+    %{items: items} =
+      response
+      |> xmap(
+        items: [
+          ~x"/fsapiGetMultipleResponse/fsapiResponse"l,
+          key: ~x"./node/text()"s,
+          status: ~x"./status/text()"s |> transform_by(&get_status/1),
+          value: ~x"./value/*[1]/text()"S,
+          type: ~x"./value/*"o |> transform_by(&maybe_get_type/1)
+        ]
+      )
+
+    parsed_items =
+      Enum.reduce(items, %{}, fn
+        %{key: key, value: value, type: type, status: status}, acc ->
+          case status do
+            :ok -> Map.put(acc, key, parse_by_type(value, type))
+            error -> Map.put(acc, key, status)
+          end
+
+        %{key: key, status: status}, acc ->
+          Map.put(acc, key, status)
+      end)
+
+    {:ok, parsed_items}
+  end
+
+  defp parse_by_type(value, type) do
+    case type do
+      :c8_array -> value
+      :array -> Base.decode16!(String.upcase(value))
+      _ -> String.to_integer(value)
+    end
+  end
+
+  defp maybe_get_type({:xmlElement, element, _, _, _, _, _, _, _, _, _, _}), do: element
+  defp maybe_get_type(_), do: nil
 end

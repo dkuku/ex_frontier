@@ -199,6 +199,49 @@ defmodule ExAssistant.FrontierSilicon.ParserTest do
     end
   end
 
+  describe "handle_get_multiple" do
+    test "basic test" do
+      response = """
+      <fsapiGetMultipleResponse>
+        <fsapiResponse>
+          <node>netRemote.sys.sleep</node>
+          <status>FS_OK</status>
+          <value><u32>0</u32></value>
+        </fsapiResponse>
+        <fsapiResponse>
+          <node>netRemote.sys.power</node>
+          <status>FS_OK</status>
+          <value><u8>0</u8></value>
+        </fsapiResponse>
+      </fsapiGetMultipleResponse>
+      """
+
+      assert {:ok, list} = Parser.parse_get_multiple(response)
+
+      assert_value list == %{"netRemote.sys.power" => 0, "netRemote.sys.sleep" => 0}
+    end
+
+    test "with error" do
+      response = """
+      <fsapiGetMultipleResponse>
+        <fsapiResponse>
+          <node>netRemote.sys.sleep</node>
+          <status>FS_OK</status>
+          <value><u32>0</u32></value>
+        </fsapiResponse>
+        <fsapiResponse>
+          <node>netRemote.sys</node>
+          <status>FS_NODE_DOES_NOT_EXIST</status>
+          </fsapiResponse>
+      </fsapiGetMultipleResponse>
+      """
+
+      assert {:ok, list} = Parser.parse_get_multiple(response)
+
+      assert_value list == %{"netRemote.sys" => {:error, :not_exist}, "netRemote.sys.sleep" => 0}
+    end
+  end
+
   describe "handle_get" do
     test "c8_array" do
       response = """
@@ -250,8 +293,8 @@ defmodule ExAssistant.FrontierSilicon.ParserTest do
   end
 
   test "int_to_ip" do
-  assert_value Parser.int_to_ip(3_232_235_927) == "192.168.1.151"
-  assert_value Parser.int_to_ip(3_232_235_777) == "192.168.1.1"
-  assert_value Parser.int_to_ip(4_294_967_040) == "255.255.255.0"
+    assert_value Parser.int_to_ip(3_232_235_927) == "192.168.1.151"
+    assert_value Parser.int_to_ip(3_232_235_777) == "192.168.1.1"
+    assert_value Parser.int_to_ip(4_294_967_040) == "255.255.255.0"
   end
 end

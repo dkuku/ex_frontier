@@ -24,6 +24,7 @@ defmodule FrontierSilicon.Connector do
     session_id = Parser.get_session_id(body)
     Map.put(conn, :session_id, session_id)
   end
+
   def get_play_info_name(conn) do
     handle_get(conn, "netRemote.play.info.name")
   end
@@ -140,7 +141,7 @@ defmodule FrontierSilicon.Connector do
   end
 
   def handle_list(conn, item) do
-    with response = call(conn, "LIST_GET_NEXT/#{item}/-1", %{"maxItems" => 100}),
+    with response = call(conn, "LIST_GET_NEXT/#{item}/-1", maxItems: 100),
          :ok <- Parser.get_response_status(response),
          {:ok, list} <- Parser.parse_list(response) do
       list
@@ -148,7 +149,6 @@ defmodule FrontierSilicon.Connector do
       {:error, error} -> error
     end
   end
-
 
   def handle_get(conn, item) do
     with response = call(conn, "GET/#{item}"),
@@ -160,6 +160,11 @@ defmodule FrontierSilicon.Connector do
     else
       {:error, error} -> error
     end
+  end
+
+  def handle_get_multiple(conn, items) do
+    params = Enum.map(items, &{:node, &1})
+    call(conn, "GET_MULTIPLE", params)
   end
 
   def handle_set(conn, item, true), do: handle_set(conn, item, 1)
@@ -178,8 +183,8 @@ defmodule FrontierSilicon.Connector do
     end
   end
 
-  def call(conn, path, params \\ %{}) do
-    query_params = URI.encode_query(Map.merge(%{sid: conn.session_id, pin: @pin}, params))
+  def call(conn, path, params \\ []) do
+    query_params = URI.encode_query([pin: @pin] ++ params)
 
     {:ok, %{body: body}} =
       conn.webfsapi
