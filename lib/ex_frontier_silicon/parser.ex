@@ -130,6 +130,31 @@ defmodule ExFrontierSilicon.Parser do
     {:ok, parsed_items}
   end
 
+  def parse_get_notifies(response) do
+    %{items: items, status: status} =
+      response
+      |> xmap(
+        status: ~x"/fsapiResponse/status/text()"s |> transform_by(&get_status/1),
+        items: [
+          ~x"/fsapiResponse/notify"l,
+          key: ~x"./@node"s,
+          value: ~x"./value/*[1]/text()"S,
+          type: ~x"./value/*"o |> transform_by(&maybe_get_type/1)
+        ]
+      )
+
+    case status do
+      :ok ->
+        {:ok,
+         Enum.reduce(items, %{}, fn %{key: key, value: value, type: type}, acc ->
+           Map.put(acc, key, parse_by_type(value, type))
+         end)}
+
+      error ->
+        error
+    end
+  end
+
   defp parse_by_type(value, type) do
     case type do
       :c8_array -> value

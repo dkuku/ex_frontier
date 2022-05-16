@@ -175,6 +175,13 @@ defmodule ExFrontierSilicon.Connector do
     end
   end
 
+  def handle_get_notifies(conn) do
+    case call(conn, "GET_NOTIFIES", sid: conn.session_id) do
+      {:error, :timeout} = e -> e
+      res -> Parser.parse_get_notifies(res)
+    end
+  end
+
   def handle_set(conn, item, true), do: handle_set(conn, item, 1)
   def handle_set(conn, item, false), do: handle_set(conn, item, 0)
 
@@ -194,12 +201,13 @@ defmodule ExFrontierSilicon.Connector do
   def call(conn, path, params \\ []) do
     query_params = URI.encode_query([pin: @pin] ++ params)
 
-    {:ok, %{body: body}} =
-      conn.webfsapi
-      |> Kernel.<>("/" <> path)
-      |> Kernel.<>("?" <> query_params)
-      |> get()
-
-    body
+    conn.webfsapi
+    |> Kernel.<>("/" <> path)
+    |> Kernel.<>("?" <> query_params)
+    |> get()
+    |> case do
+      {:ok, %{body: body}} -> body
+      {:error, :timeout} = e -> e
+    end
   end
 end

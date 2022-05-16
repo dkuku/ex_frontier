@@ -292,6 +292,21 @@ defmodule ExAssistant.ExFrontierSilicon.ParserTest do
     end
   end
 
+  describe "handle_get_notifies" do
+    test "netremote.play.info.text" do
+      response = """
+      <fsapiResponse>
+      <status>FS_OK</status>
+      <notify node="netremote.play.info.text"><value><c8_array>Arthur Brown - Fire</c8_array></value>
+      </notify>
+      </fsapiResponse>
+      """
+
+      assert {:ok, list} = Parser.parse_get_notifies(response)
+      assert_value list == %{"netremote.play.info.text" => "Arthur Brown - Fire"}
+    end
+  end
+
   test "int_to_ip" do
     assert_value Parser.int_to_ip(3_232_235_927) == "192.168.1.151"
     assert_value Parser.int_to_ip(3_232_235_777) == "192.168.1.1"

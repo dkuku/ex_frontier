@@ -100,6 +100,21 @@ defmodule ExFrontierSilicon.ConnectorTest do
                     }}
   end
 
+  test "handle_get_notifies", %{conn: conn} do
+    """
+    <fsapiResponse>
+    <status>FS_OK</status>
+    <notify node=\"netremote.play.info.text\"><value><c8_array>Rammstein - Zeit</c8_array></value>
+    </notify>
+    </fsapiResponse>
+    """
+    |> mock_request()
+
+    response = Connector.handle_get_notifies(conn)
+
+    assert_value response == {:ok, %{"netremote.play.info.text" => "Rammstein - Zeit"}}
+  end
+
   test "handle_list", %{conn: conn} do
     """
     <fsapiResponse>

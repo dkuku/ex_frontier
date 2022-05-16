@@ -17,7 +17,7 @@ defmodule ExFrontierSilicon.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       name: "ex_chroma",
       source_url: @source_url,
-      version: "0.1.0",
+      version: "0.1.0"
     ]
   end
 
@@ -39,9 +39,8 @@ defmodule ExFrontierSilicon.MixProject do
       licenses: ["Apache-2.0"],
       links: %{
         "GitHub" => @source_url,
-        "Changelog" => "#{@source_url}/blob/master/CHANGELOG.md",
+        "Changelog" => "#{@source_url}/blob/master/CHANGELOG.md"
       }
-
     ]
   end
 
