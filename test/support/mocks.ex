@@ -1,1 +1,1 @@
-Hammox.defmock(FrontierSilicon.Tesla.Mock, for: Tesla.Adapter)
+Hammox.defmock(ExFrontierSilicon.Tesla.Mock, for: Tesla.Adapter)

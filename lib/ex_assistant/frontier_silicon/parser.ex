@@ -1,4 +1,4 @@
-defmodule FrontierSilicon.Parser do
+defmodule ExFrontierSilicon.Parser do
   import SweetXml
   def postprocess_response(value, :array, _item), do: Base.decode16!(String.upcase(value))
 

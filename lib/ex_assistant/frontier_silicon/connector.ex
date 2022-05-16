@@ -1,7 +1,7 @@
-defmodule FrontierSilicon.Connector do
+defmodule ExFrontierSilicon.Connector do
   use Tesla
-  alias FrontierSilicon.Constants
-  alias FrontierSilicon.Parser
+  alias ExFrontierSilicon.Constants
+  alias ExFrontierSilicon.Parser
 
   @url "http://192.168.1.151:80/device"
   @max_get_multiple_count 10

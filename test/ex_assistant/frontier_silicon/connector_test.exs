@@ -1,9 +1,9 @@
-defmodule FrontierSilicon.ConnectorTest do
+defmodule ExFrontierSilicon.ConnectorTest do
   use ExUnit.Case, async: true
   import AssertValue
   import Hammox
 
-  alias FrontierSilicon.Connector
+  alias ExFrontierSilicon.Connector
 
   setup_all do
     conn = %{
@@ -153,13 +153,13 @@ defmodule FrontierSilicon.ConnectorTest do
 
   defp mock_request(body) do
     expect(
-      FrontierSilicon.Tesla.Mock,
+      ExFrontierSilicon.Tesla.Mock,
       :call,
       fn %{url: url}, _opts ->
         {:ok,
          %Tesla.Env{
            __client__: %Tesla.Client{adapter: nil, fun: nil, post: [], pre: []},
-           __module__: FrontierSilicon.Connector,
+           __module__: ExFrontierSilicon.Connector,
            body: body,
            headers: [
              {"content-type", "text/xml"},

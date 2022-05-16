@@ -1,4 +1,4 @@
-defmodule FrontierSilicon.Constants do
+defmodule ExFrontierSilicon.Constants do
   @net_remote_play_states %{
     0 => :stopped,
     1 => :unknown,

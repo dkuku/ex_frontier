@@ -33,4 +33,4 @@ config :ex_unit, timeout: :infinity
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
 
-config :tesla, adapter: FrontierSilicon.Tesla.Mock
+config :tesla, adapter: ExFrontierSilicon.Tesla.Mock

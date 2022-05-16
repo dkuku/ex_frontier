@@ -1,9 +1,9 @@
 defmodule ExAssistantWeb.PageController do
   use ExAssistantWeb, :controller
-  alias FrontierSilicon.Constants
+  alias ExFrontierSilicon.Constants
 
   def index(conn, _params) do
-    connection = FrontierSilicon.Connector.connect()
+    connection = ExFrontierSilicon.Connector.connect()
 
     params =
       Constants.get()
@@ -25,7 +25,7 @@ defmodule ExAssistantWeb.PageController do
   defp get_list(connection, param) do
     try do
       connection
-      |> FrontierSilicon.Connector.handle_list(param)
+      |> ExFrontierSilicon.Connector.handle_list(param)
     rescue
       error ->
         IO.inspect(error)
@@ -37,8 +37,8 @@ defmodule ExAssistantWeb.PageController do
     try do
       {:ok, params} =
         connection
-        |> FrontierSilicon.Connector.handle_get_multiple(params)
-        |> FrontierSilicon.Parser.parse_get_multiple()
+        |> ExFrontierSilicon.Connector.handle_get_multiple(params)
+        |> ExFrontierSilicon.Parser.parse_get_multiple()
 
       params
     rescue
