@@ -1,5 +1,6 @@
 defmodule ExFrontierSilicon.Parser do
   import SweetXml
+  alias ExFrontierSilicon.Conn
   def postprocess_response(value, :array, _item), do: Base.decode16!(String.upcase(value))
 
   def postprocess_response(value, _, "netRemote.sys.net.ipConfig." <> item) when item != "dhcp",
@@ -61,7 +62,7 @@ defmodule ExFrontierSilicon.Parser do
   end
 
   def parse_connect(body) do
-    %{
+    %Conn{
       friendly_name: xpath(body, ~x"/netRemote/friendlyName/text()"s),
       version: xpath(body, ~x"/netRemote/version/text()"s),
       webfsapi: xpath(body, ~x"/netRemote/webfsapi/text()"s)

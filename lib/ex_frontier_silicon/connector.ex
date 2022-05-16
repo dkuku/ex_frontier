@@ -3,6 +3,7 @@ defmodule ExFrontierSilicon.Connector do
   alias ExFrontierSilicon.Constants
   alias ExFrontierSilicon.Parser
 
+  defstruct [:friendly_name, :session_id, :version, :webfsapi]
   @url "http://192.168.1.151:80/device"
   @max_get_multiple_count 10
   @pin 1234
@@ -16,13 +17,11 @@ defmodule ExFrontierSilicon.Connector do
   end
 
   def append_session(conn) do
-    {:ok, %{body: body}} =
-      conn.webfsapi
-      |> Kernel.<>("/CREATE_SESSION")
-      |> Kernel.<>("?" <> URI.encode_query(%{pin: @pin}))
-      |> get()
+    session_id =
+      conn
+      |> call("CREATE_SESSION", pin: @pin)
+      |> Parser.get_session_id()
 
-    session_id = Parser.get_session_id(body)
     Map.put(conn, :session_id, session_id)
   end
 

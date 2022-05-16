@@ -35,7 +35,7 @@ defmodule ExFrontierSilicon.ConnectorTest do
     |> mock_request()
 
     assert_value Connector.connect() ==
-                   %{
+                   %ExFrontierSilicon.Conn{
                      friendly_name: "speaker",
                      session_id: "96716244",
                      version: "ir-mmi-FS2026-0500-0487_V2.14.33.EX85161-2RC12",
@@ -104,7 +104,8 @@ defmodule ExFrontierSilicon.ConnectorTest do
     """
     <fsapiResponse>
     <status>FS_OK</status>
-    <notify node=\"netremote.play.info.text\"><value><c8_array>Rammstein - Zeit</c8_array></value>
+    <notify node="netremote.play.info.text">
+    <value><c8_array>Rammstein - Zeit</c8_array></value>
     </notify>
     </fsapiResponse>
     """

@@ -16,8 +16,7 @@ defmodule ExFrontierSilicon.MixProject do
       deps: deps(),
       elixirc_paths: elixirc_paths(Mix.env()),
       name: "ex_chroma",
-      source_url: @source_url,
-      version: "0.1.0"
+      source_url: @source_url
     ]
   end
 
