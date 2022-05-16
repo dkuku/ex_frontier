@@ -104,22 +104,22 @@ defmodule FrontierSilicon.ConnectorTest do
     """
     <fsapiResponse>
     <status>FS_OK</status>
-    <item key=\"0\">
-    <field name=\"name\"><c8_array>ROCK ANTENNE</c8_array></field>
-    <field name=\"type\"><u8>1</u8></field>
-    <field name=\"subtype\"><u8>1</u8></field>
-    <field name=\"graphicuri\"><c8_array></c8_array></field>
-    <field name=\"artist\"><c8_array></c8_array></field>
-    <field name=\"contextmenu\"><u8>0</u8></field>
+    <item key="0">
+    <field name="name"><c8_array>ROCK ANTENNE</c8_array></field>
+    <field name="type"><u8>1</u8></field>
+    <field name="subtype"><u8>1</u8></field>
+    <field name="graphicuri"><c8_array></c8_array></field>
+    <field name="artist"><c8_array></c8_array></field>
+    <field name="contextmenu"><u8>0</u8></field>
 
     </item>
-    <item key=\"1\">
-    <field name=\"name\"><c8_array>Podcasts</c8_array></field>
-    <field name=\"type\"><u8>0</u8></field>
-    <field name=\"subtype\"><u8>0</u8></field>
-    <field name=\"graphicuri\"><c8_array></c8_array></field>
-    <field name=\"artist\"><c8_array></c8_array></field>
-    <field name=\"contextmenu\"><u8>0</u8></field>
+    <item key="1">
+    <field name="name"><c8_array>Podcasts</c8_array></field>
+    <field name="type"><u8>0</u8></field>
+    <field name="subtype"><u8>0</u8></field>
+    <field name="graphicuri"><c8_array></c8_array></field>
+    <field name="artist"><c8_array></c8_array></field>
+    <field name="contextmenu"><u8>0</u8></field>
 
     </item>
     <listend/>
