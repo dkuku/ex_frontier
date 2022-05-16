@@ -53,121 +53,142 @@ defmodule ExFrontierSilicon.Constants do
     1 => :ready
   }
 
-  @get """
-  netRemote.avs.hastoken
-  netRemote.nav.caps
-  netRemote.nav.description
-  netRemote.nav.numItems
-  netRemote.nav.preset.currentPreset
-  netRemote.nav.status
-  netRemote.play.addPresetStatus
-  netRemote.play.caps
-  netRemote.play.errorStr
-  netRemote.play.info.album
-  netRemote.play.info.artist
-  netRemote.play.info.description
-  netRemote.play.info.duration
-  netRemote.play.info.graphicUri
-  netRemote.play.info.name
-  netRemote.play.info.text
-  netRemote.play.position
-  netRemote.play.status
-  netRemote.sys.audio.airableQuality
-  netRemote.sys.audio.eqCustom.param0
-  netRemote.sys.audio.eqCustom.param1
-  netRemote.sys.audio.eqLoudness
-  netRemote.sys.audio.eqPreset
-  netRemote.sys.audio.extStaticDelay
-  netRemote.sys.audio.mute
-  netRemote.sys.audio.volume
-  netRemote.sys.caps.volumeSteps
-  netRemote.sys.clock.dst
-  netRemote.sys.clock.localDate
-  netRemote.sys.clock.localTime
-  netRemote.sys.clock.mode
-  netRemote.sys.clock.source
-  netRemote.sys.clock.utcOffset
-  netRemote.sys.info.friendlyName
-  netRemote.sys.info.radioId
-  netRemote.sys.info.radiopin
-  netRemote.sys.info.version
-  netRemote.sys.isu.control
-  netRemote.sys.isu.state
-  netRemote.sys.lang
-  netRemote.sys.mode
-  netRemote.sys.net.ipConfig.address
-  netRemote.sys.net.ipConfig.dhcp
-  netRemote.sys.net.ipConfig.dnsPrimary
-  netRemote.sys.net.ipConfig.dnsSecondary
-  netRemote.sys.net.ipConfig.gateway
-  netRemote.sys.net.ipConfig.subnetMask
-  netRemote.sys.net.keepConnected
-  netRemote.sys.net.wired.interfaceEnable
-  netRemote.sys.net.wired.macAddress
-  netRemote.sys.net.wlan.connectedSSID
-  netRemote.sys.net.wlan.interfaceEnable
-  netRemote.sys.net.wlan.macAddress
-  netRemote.sys.net.wlan.region
-  netRemote.sys.net.wlan.regionFcc
-  netRemote.sys.net.wlan.regionfcc
-  netRemote.sys.net.wlan.rssi
-  netRemote.sys.net.wlan.scan
-  netRemote.sys.net.wlan.setAuthType
-  netRemote.sys.net.wlan.setEncType
-  netRemote.sys.net.wlan.setSSID
-  netRemote.sys.power
-  netRemote.sys.rsa.publicKey___
-  netRemote.sys.rsa.status
-  netRemote.sys.sleep
-  netRemote.sys.wlan.regionfcc
-  """
-  @list """
-  netRemote.multiroom.device.listAll
-  netRemote.nav.form.item
-  netRemote.nav.list
-  netRemote.nav.presets
-  netRemote.sys.caps.clockSourceList
-  netRemote.sys.caps.eqBands
-  netRemote.sys.caps.eqPresets
-  netRemote.sys.caps.validLang
-  netRemote.sys.caps.validModes
-  netRemote.sys.net.wlan.scanList
-  """
-  @set """
-  netRemote.nav.action.navigate
-  netRemote.nav.action.selectItem
-  netRemote.nav.encformData
-  netRemote.nav.preset.delete
-  netRemote.nav.state
-  netRemote.play.addPreset
-  netRemote.play.control
-  netRemote.play.repeat
-  netRemote.play.shuffle
-  netRemote.sys.audio.airableQuality
-  netRemote.sys.audio.eqPreset
-  netRemote.sys.audio.mute
-  netRemote.sys.audio.volume
-  netRemote.sys.cfg.irAutoPlayFlag
-  netRemote.sys.factoryReset
-  netRemote.sys.info.controllerName
-  netRemote.sys.info.friendlyName
-  netRemote.sys.isu.control
-  netRemote.sys.lang
-  netRemote.sys.mode
-  netRemote.sys.net.ipConfig.dhcp
-  netRemote.sys.net.keepConnected
-  netRemote.sys.net.wired.interfaceEnable
-  netRemote.sys.net.wlan.interfaceEnable
-  netRemote.sys.net.wlan.keepConnected
-  netRemote.sys.net.wlan.region
-  netRemote.sys.net.wlan.scan
-  netRemote.sys.net.wlan.setSSID
-  netRemote.sys.power
-  netRemote.sys.sleep
-  """
+  @nav [
+    "netRemote.nav.caps",
+    "netRemote.nav.description",
+    "netRemote.nav.numItems",
+    "netRemote.nav.preset.currentPreset",
+    "netRemote.nav.status"
+  ]
+  @play_info [
+    "netRemote.play.info.album",
+    "netRemote.play.info.artist",
+    "netRemote.play.info.description",
+    "netRemote.play.info.duration",
+    "netRemote.play.info.graphicUri",
+    "netRemote.play.info.name",
+    "netRemote.play.info.text"
+  ]
+  @play_current [
+    "netRemote.play.caps",
+    "netRemote.play.position",
+    "netRemote.play.status"
+  ]
+  @audio [
+    "netRemote.sys.audio.airableQuality",
+    "netRemote.sys.audio.eqCustom.param0",
+    "netRemote.sys.audio.eqCustom.param1",
+    "netRemote.sys.audio.eqLoudness",
+    "netRemote.sys.audio.eqPreset",
+    "netRemote.sys.audio.extStaticDelay",
+    "netRemote.sys.audio.mute",
+    "netRemote.sys.audio.volume",
+    "netRemote.sys.caps.volumeSteps"
+  ]
+  @clock [
+    "netRemote.sys.clock.dst",
+    "netRemote.sys.clock.localDate",
+    "netRemote.sys.clock.localTime",
+    "netRemote.sys.clock.mode",
+    "netRemote.sys.clock.source",
+    "netRemote.sys.clock.utcOffset"
+  ]
+  @info [
+    "netRemote.sys.info.friendlyName",
+    "netRemote.sys.info.radioId",
+    "netRemote.sys.info.radiopin",
+    "netRemote.sys.info.version",
+    "netRemote.sys.isu.control",
+    "netRemote.sys.isu.state",
+    "netRemote.sys.lang",
+    "netRemote.sys.mode",
+    "netRemote.sys.power",
+    "netRemote.sys.sleep"
+  ]
+  @ipconfig [
+    "netRemote.sys.net.ipConfig.address",
+    "netRemote.sys.net.ipConfig.dhcp",
+    "netRemote.sys.net.ipConfig.dnsPrimary",
+    "netRemote.sys.net.ipConfig.dnsSecondary",
+    "netRemote.sys.net.ipConfig.gateway",
+    "netRemote.sys.net.ipConfig.subnetMask"
+  ]
+  @wired [
+    "netRemote.sys.net.keepConnected",
+    "netRemote.sys.net.wired.interfaceEnable",
+    "netRemote.sys.net.wired.macAddress"
+  ]
+  @wlan [
+    "netRemote.sys.net.wlan.connectedSSID",
+    "netRemote.sys.net.wlan.interfaceEnable",
+    "netRemote.sys.net.wlan.macAddress",
+    "netRemote.sys.net.wlan.region",
+    "netRemote.sys.net.wlan.regionFcc",
+    "netRemote.sys.net.wlan.rssi",
+    "netRemote.sys.net.wlan.scan",
+    "netRemote.sys.net.wlan.setAuthType",
+    "netRemote.sys.net.wlan.setEncType",
+    "netRemote.sys.net.wlan.setSSID"
+  ]
+  @list [
+    "netRemote.multiroom.device.listAll",
+    "netRemote.nav.form.item",
+    "netRemote.nav.list",
+    "netRemote.nav.presets",
+    "netRemote.sys.caps.clockSourceList",
+    "netRemote.sys.caps.eqBands",
+    "netRemote.sys.caps.eqPresets",
+    "netRemote.sys.caps.validLang",
+    "netRemote.sys.caps.validModes",
+    "netRemote.sys.net.wlan.scanList"
+  ]
+  @set [
+    "netRemote.nav.action.navigate",
+    "netRemote.nav.action.selectItem",
+    "netRemote.nav.encformData",
+    "netRemote.nav.preset.delete",
+    "netRemote.nav.state",
+    "netRemote.play.addPreset",
+    "netRemote.play.control",
+    "netRemote.play.repeat",
+    "netRemote.play.shuffle",
+    "netRemote.sys.audio.airableQuality",
+    "netRemote.sys.audio.eqPreset",
+    "netRemote.sys.audio.mute",
+    "netRemote.sys.audio.volume",
+    "netRemote.sys.cfg.irAutoPlayFlag",
+    "netRemote.sys.factoryReset",
+    "netRemote.sys.info.controllerName",
+    "netRemote.sys.info.friendlyName",
+    "netRemote.sys.isu.control",
+    "netRemote.sys.lang",
+    "netRemote.sys.mode",
+    "netRemote.sys.net.ipConfig.dhcp",
+    "netRemote.sys.net.keepConnected",
+    "netRemote.sys.net.wired.interfaceEnable",
+    "netRemote.sys.net.wlan.interfaceEnable",
+    "netRemote.sys.net.wlan.keepConnected",
+    "netRemote.sys.net.wlan.region",
+    "netRemote.sys.net.wlan.scan",
+    "netRemote.sys.net.wlan.setSSID",
+    "netRemote.sys.power",
+    "netRemote.sys.sleep"
+  ]
+  @get @play_current ++ @play_info ++ @audio ++ @info ++ @nav ++ @wired ++ @ipconfig ++ @clock ++ @wlan
+
   def get(), do: @get
   def set(), do: @set
   def list(), do: @list
+
+  def play_current, do: @play_current
+  def play_info, do: @play_info
+  def audio, do: @audio
+  def info, do: @info
+  def nav, do: @nav
+  def wired, do: @wired
+  def ipconfig, do: @ipconfig
+  def clock, do: @clock
+  def wlan, do: @wlan
 
   def net_remote_play_states(key), do: @net_remote_play_states[key]
 

@@ -1,6 +1,5 @@
 defmodule ExFrontierSilicon.Connector do
   use Tesla
-  alias ExFrontierSilicon.Constants
   alias ExFrontierSilicon.Parser
 
   defstruct [:friendly_name, :session_id, :version, :webfsapi]
@@ -16,7 +15,7 @@ defmodule ExFrontierSilicon.Connector do
     |> append_session()
   end
 
-  def append_session(conn) do
+  defp append_session(conn) do
     session_id =
       conn
       |> call("CREATE_SESSION", pin: @pin)
@@ -25,123 +24,14 @@ defmodule ExFrontierSilicon.Connector do
     Map.put(conn, :session_id, session_id)
   end
 
-  def get_play_info_name(conn) do
-    handle_get(conn, "netRemote.play.info.name")
-  end
-
-  def get_play_info_text(conn) do
-    handle_get(conn, "netRemote.play.info.text")
-  end
-
-  def get_play_info_artist(conn) do
-    handle_get(conn, "netRemote.play.info.artist")
-  end
-
-  def get_play_info_album(conn) do
-    handle_get(conn, "netRemote.play.info.album")
-  end
-
-  def get_play_info_graphics(conn) do
-    handle_get(conn, "netRemote.play.info.graphicUri")
-  end
-
-  def get_volume_steps(conn) do
-    handle_get(conn, "netRemote.sys.caps.volumeSteps")
-  end
-
-  def get_play_status(conn) do
-    status = handle_get(conn, "netRemote.play.status")
-    Constants.net_remote_play_states(status)
-  end
-
-  def get_volume(conn) do
-    handle_get(conn, "netRemote.sys.audio.volume")
-  end
-
-  def get_mute(conn) do
-    handle_get(conn, "netRemote.sys.audio.mute")
-  end
-
-  def get_power(conn) do
-    handle_get(conn, "netRemote.sys.power")
-  end
-
-  def get_friendly_name(conn) do
-    handle_get(conn, "netRemote.sys.info.friendlyName")
-  end
-
-  def get_duration(conn) do
-    with duration when is_integer(duration) <-
-           handle_get(conn, "netRemote.play.info.duration") do
-      Time.add(~T[00:00:00], duration, :millisecond)
-    end
-  end
-
-  def get_mode(conn) do
-    mode = handle_get(conn, "netRemote.sys.mode")
-    Enum.find(get_modes(conn), fn %{key: key} -> key == mode end)
-  end
-
-  def get_eq_modes(conn) do
-    handle_list(conn, "netRemote.sys.caps.eqPresets")
-  end
-
-  def get_wifi_scan(conn) do
-    handle_list(conn, "netRemote.sys.net.wlan.scanList")
-  end
-
-  def get_modes(conn) do
-    handle_list(conn, "netRemote.sys.caps.validModes")
-  end
-
   def disconnect(conn) do
     response = call(conn, "DELETE_SESSION")
 
     Parser.get_response_status(response)
   end
 
-  def play(conn) do
-    play_control(conn, 1)
-  end
-
-  def pause(conn) do
-    play_control(conn, 2)
-  end
-
-  def forward(conn) do
-    play_control(conn, 3)
-  end
-
-  def rewind(conn) do
-    play_control(conn, 4)
-  end
-
-  def play_control(conn, value) do
-    handle_set(conn, "netRemote.play.control", value)
-  end
-
-  def set_volume(conn, value) do
-    handle_set(conn, "netRemote.sys.audio.volume", value)
-  end
-
-  def set_friendly_name(conn, value) do
-    handle_set(conn, "netRemote.sys.info.friendlyName", value)
-  end
-
-  def set_mute(conn, value) do
-    handle_set(conn, "netRemote.sys.audio.mute", value)
-  end
-
-  def set_power(conn, value) do
-    handle_set(conn, "netRemote.sys.power", value)
-  end
-
-  def set_mode(conn, mode) do
-    handle_set(conn, "netRemote.sys.mode", mode)
-  end
-
   def handle_list(conn, item) do
-    with response = call(conn, "LIST_GET_NEXT/#{item}/-1", maxItems: 100),
+    with response <- call(conn, "LIST_GET_NEXT/#{item}/-1", maxItems: 100),
          :ok <- Parser.get_response_status(response),
          {:ok, list} <- Parser.parse_list(response) do
       list
@@ -151,12 +41,11 @@ defmodule ExFrontierSilicon.Connector do
   end
 
   def handle_get(conn, item) do
-    with response = call(conn, "GET/#{item}"),
+    with response <- call(conn, "GET/#{item}"),
          :ok <- Parser.get_response_status(response),
          type = Parser.get_response_type(response),
-         {:ok, raw_value} = Parser.parse_response(response),
-         value = Parser.postprocess_response(raw_value, type, item) do
-      value
+         {:ok, raw_value} <- Parser.parse_response(response) do
+      Parser.postprocess_response(raw_value, type, item)
     else
       {:error, error} -> error
     end
