@@ -1,12 +1,12 @@
 # ExAssistant
 
-To start your Phoenix server:
-
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.setup`
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
-
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+## config
+    config :ex_frontier_silicon,
+    hostname: "192.168.1.151",
+    max_get_multiple_count: 10,
+    path: "device",
+    pin: 1234,
+    port: "80"
 
 ## sniffing data
 
@@ -15,10 +15,10 @@ create an ap
     sudo bettercap -no-colors -eval "events.stream off; set events.stream.output ~/bettercap-events.log; events.stream on" -iface wlp0s20f0u1 
 
 ## commands
+
 /GET
-/GET/netRemote.sys.sleep  
+/GET/netRemote.sys.sleep
 /GET_NOTIFIES?sid=156666519 
-/GET_MULTIPLE?node=netRemote.avs.hastoken&node=netRemote.cast....
 /GET_MULTIPLE?node=netRemote.sys.power&node=netRemote.sys.mode& 
 
 /SET

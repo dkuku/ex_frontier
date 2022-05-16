@@ -174,7 +174,8 @@ defmodule ExFrontierSilicon.Constants do
     "netRemote.sys.power",
     "netRemote.sys.sleep"
   ]
-  @get @play_current ++ @play_info ++ @audio ++ @info ++ @nav ++ @wired ++ @ipconfig ++ @clock ++ @wlan
+  @get @play_current ++
+         @play_info ++ @audio ++ @info ++ @nav ++ @wired ++ @ipconfig ++ @clock ++ @wlan
 
   def get(), do: @get
   def set(), do: @set
