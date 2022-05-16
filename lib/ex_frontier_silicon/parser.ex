@@ -131,6 +131,26 @@ defmodule ExFrontierSilicon.Parser do
     {:ok, parsed_items}
   end
 
+  def parse_set_multiple(response) do
+    %{items: items} =
+      response
+      |> xmap(
+        items: [
+          ~x"/fsapiSetMultipleResponse/fsapiResponse"l,
+          key: ~x"./node/text()"s,
+          status: ~x"./status/text()"s |> transform_by(&get_status/1)
+        ]
+      )
+
+    parsed_items =
+      Enum.reduce(items, %{}, fn
+        %{key: key, status: status}, acc ->
+          Map.put(acc, key, status)
+      end)
+
+    {:ok, parsed_items}
+  end
+
   def parse_get_notifies(response) do
     %{items: items, status: status} =
       response

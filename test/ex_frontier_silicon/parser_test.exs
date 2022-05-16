@@ -199,6 +199,30 @@ defmodule ExAssistant.ExFrontierSilicon.ParserTest do
     end
   end
 
+  describe "handle_set_multiple" do
+    test "basic test" do
+      response = """
+      <fsapiSetMultipleResponse>
+      <fsapiResponse>
+      <node>netRemote.nav.searchTerm</node>
+      <status>FS_OK</status>
+      </fsapiResponse>
+      <fsapiResponse>
+      <node>netRemote.nav.action.navigate</node>
+      <status>FS_OK</status>
+      </fsapiResponse>
+      </fsapiSetMultipleResponse>
+      """
+
+      assert {:ok, list} = Parser.parse_set_multiple(response)
+
+      assert_value list == %{
+                     "netRemote.nav.action.navigate" => :ok,
+                     "netRemote.nav.searchTerm" => :ok
+                   }
+    end
+  end
+
   describe "handle_get_multiple" do
     test "basic test" do
       response = """

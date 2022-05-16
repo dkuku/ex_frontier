@@ -68,6 +68,34 @@ defmodule ExFrontierSilicon.ConnectorTest do
     assert_value response == :ok
   end
 
+  test "handle_set_multiple", %{conn: conn} do
+    """
+    <fsapiSetMultipleResponse>
+    <fsapiResponse>
+    <node>netRemote.nav.searchTerm</node>
+    <status>FS_OK</status>
+    </fsapiResponse>
+    <fsapiResponse>
+    <node>netRemote.nav.action.navigate</node>
+    <status>FS_OK</status>
+    </fsapiResponse>
+    </fsapiSetMultipleResponse>
+    """
+    |> mock_request()
+
+    response =
+      Connector.handle_set_multiple(conn, [
+        "netRemote.nav.searchTerm",
+        "antyradio",
+        "netRemote.nav.action.navigate",
+        "1"
+      ])
+
+    assert_value response ==
+                   {:ok,
+                    %{"netRemote.nav.action.navigate" => :ok, "netRemote.nav.searchTerm" => :ok}}
+  end
+
   test "handle_get_multiple", %{conn: conn} do
     """
     <fsapiGetMultipleResponse>

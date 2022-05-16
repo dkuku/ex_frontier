@@ -81,6 +81,16 @@ defmodule ExFrontierSilicon.Connector do
     end
   end
 
+  def handle_set_multiple(conn, values) do
+    params =
+      values
+      |> Enum.chunk_every(2)
+      |> Enum.reduce([], fn [node, value], acc -> [{:node, node}, {:value, value} | acc] end)
+
+    response = call(conn, "SET_MULTIPLE", params)
+    Parser.parse_set_multiple(response)
+  end
+
   def call(conn, path, params \\ []) do
     query_params = URI.encode_query([pin: pin()] ++ params)
 
