@@ -4,6 +4,7 @@ defmodule FrontierSilicon.Connector do
   alias FrontierSilicon.Parser
 
   @url "http://192.168.1.151:80/device"
+  @max_get_multiple_count 10
   @pin 1234
 
   def connect do
@@ -163,15 +164,22 @@ defmodule FrontierSilicon.Connector do
   end
 
   def handle_get_multiple(conn, items) do
-    params = Enum.map(items, &{:node, &1})
-    call(conn, "GET_MULTIPLE", params)
+    if Enum.count_until(items, @max_get_multiple_count + 1) <= @max_get_multiple_count do
+      params = Enum.map(items, &{:node, &1})
+
+      conn
+      |> call("GET_MULTIPLE", params)
+      |> Parser.parse_get_multiple()
+    else
+      {:error, :too_many_values_requested}
+    end
   end
 
   def handle_set(conn, item, true), do: handle_set(conn, item, 1)
   def handle_set(conn, item, false), do: handle_set(conn, item, 0)
 
   def handle_set(conn, item, value) do
-    response = call(conn, "SET/#{item}", %{value: value})
+    response = call(conn, "SET/#{item}", [{:value, value}])
 
     case Parser.get_response_status(response) do
       :ok ->

@@ -52,7 +52,8 @@ defmodule ExAssistant.MixProject do
       {:tesla, "~> 1.4"},
       {:hackney, "~> 1.17"},
       {:sweet_xml, "~> 0.7.1"},
-      {:assert_value, ">= 0.0.0", only: [:dev, :test]}
+      {:assert_value, ">= 0.0.0", only: [:dev, :test]},
+      {:hammox, "~> 0.5", only: :test}
     ]
   end
 

@@ -120,7 +120,7 @@ defmodule FrontierSilicon.Parser do
         %{key: key, value: value, type: type, status: status}, acc ->
           case status do
             :ok -> Map.put(acc, key, parse_by_type(value, type))
-            error -> Map.put(acc, key, status)
+            error -> Map.put(acc, key, error)
           end
 
         %{key: key, status: status}, acc ->
