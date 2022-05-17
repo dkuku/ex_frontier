@@ -1,13 +1,16 @@
 defmodule ExFrontierSilicon.Connector do
   use Tesla
+  require Logger
   alias ExFrontierSilicon.Parser
 
   def connect do
-    {:ok, %{body: body}} = get(hostname())
-
+    case get(hostname()) do
+      {:ok, %{body: body}}  -> 
     body
     |> Parser.parse_connect()
     |> append_session()
+      {:error, error} -> Logger.error(error)
+  end
   end
 
   defp append_session(conn) do

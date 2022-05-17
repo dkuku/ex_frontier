@@ -1,12 +1,6 @@
 defmodule ExFrontierSilicon.Parser do
   import SweetXml
   alias ExFrontierSilicon.Conn
-  def postprocess_response(value, :array, _item), do: Base.decode16!(String.upcase(value))
-
-  def postprocess_response(value, _, "netRemote.sys.net.ipConfig." <> item) when item != "dhcp",
-    do: int_to_ip(value)
-
-  def postprocess_response(value, _, _), do: value
 
   def parse_value(response) do
     xpath = get_xpath_by_type(response)
@@ -176,8 +170,14 @@ defmodule ExFrontierSilicon.Parser do
     end
   end
 
+  def postprocess_response(value, _, "netRemote.sys.net.ipConfig." <> item) when item != "dhcp",
+    do: int_to_ip(value)
+
+  def postprocess_response(value, type, _), do: parse_by_type(value, type)
   defp parse_by_type(value, type) do
     case type do
+      # check this line
+      :status -> value
       :c8_array -> value
       :array -> Base.decode16!(String.upcase(value))
       _ -> String.to_integer(value)

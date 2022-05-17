@@ -67,11 +67,15 @@ defmodule ExFrontierSilicon.Constants do
     "netRemote.play.info.duration",
     "netRemote.play.info.graphicUri",
     "netRemote.play.info.name",
-    "netRemote.play.info.text"
+    "netRemote.play.info.text",
+    "netRemote.play.position",
+    "netRemote.play.shuffle",
+    "netRemote.play.status"
   ]
   @play_current [
     "netRemote.play.caps",
     "netRemote.play.position",
+    "netRemote.play.shuffle",
     "netRemote.play.status"
   ]
   @audio [
@@ -180,7 +184,6 @@ defmodule ExFrontierSilicon.Constants do
   def get(), do: @get
   def set(), do: @set
   def list(), do: @list
-
   def play_current, do: @play_current
   def play_info, do: @play_info
   def audio, do: @audio
@@ -190,22 +193,13 @@ defmodule ExFrontierSilicon.Constants do
   def ipconfig, do: @ipconfig
   def clock, do: @clock
   def wlan, do: @wlan
-
   def net_remote_play_states(key), do: @net_remote_play_states[key]
-
   def net_remote_clock_source(key), do: @net_remote_clock_source[key]
-
   def net_remote_time_mode(key), do: @net_remote_time_mode[key]
-
   def net_remote_wifi_scan(key), do: @net_remote_wifi_scan[key]
-
   def net_remote_auth(key), do: @net_remote_auth[key]
-
   def net_remots_encr(key), do: @net_remots_encr[key]
-
   def net_remote_isu_state(key), do: @net_remote_isu_state[key]
-
   def net_remote_isu_control(key), do: @net_remote_isu_control[key]
-
   def net_remote_rsa_status(key), do: @net_remote_rsa_status[key]
 end
