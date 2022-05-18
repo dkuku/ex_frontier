@@ -1,11 +1,11 @@
-defmodule ExFrontierSilicon.MixProject do
+defmodule ExFrontier.MixProject do
   use Mix.Project
 
   @version "0.1.0"
-  @source_url "https://github.com/dkuku/ex_frontier_silicon"
+  @source_url "https://github.com/dkuku/ex_frontier"
   def project do
     [
-      app: :ex_frontier_silicon,
+      app: :ex_frontier,
       version: @version,
       elixir: "~> 1.0",
       start_permanent: Mix.env() == :prod,
@@ -15,7 +15,7 @@ defmodule ExFrontierSilicon.MixProject do
       package: package(),
       deps: deps(),
       elixirc_paths: elixirc_paths(Mix.env()),
-      name: "ex_chroma",
+      name: "ex_frontier",
       source_url: @source_url
     ]
   end
@@ -28,7 +28,8 @@ defmodule ExFrontierSilicon.MixProject do
 
   defp description() do
     """
-    Helper library to connect to Frontier Silicon radios
+    Helper library to connect to Frontier radios
+    Also known under the name Frontier Silicon
     """
   end
 

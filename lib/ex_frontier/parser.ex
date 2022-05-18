@@ -1,6 +1,6 @@
-defmodule ExFrontierSilicon.Parser do
+defmodule ExFrontier.Parser do
   import SweetXml
-  alias ExFrontierSilicon.Conn
+  alias ExFrontier.Conn
 
   def parse_value(response) do
     xpath = get_xpath_by_type(response)

@@ -1,4 +1,4 @@
-defmodule ExFrontierSilicon.Conn do
+defmodule ExFrontier.Conn do
   defstruct [:friendly_name, :session_id, :version, :webfsapi]
 
   @behaviour Access

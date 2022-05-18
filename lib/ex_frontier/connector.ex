@@ -1,7 +1,7 @@
-defmodule ExFrontierSilicon.Connector do
+defmodule ExFrontier.Connector do
   use Tesla
   require Logger
-  alias ExFrontierSilicon.Parser
+  alias ExFrontier.Parser
 
   def connect do
     case get(hostname()) do
@@ -28,8 +28,8 @@ defmodule ExFrontierSilicon.Connector do
     Parser.get_response_status(response)
   end
 
-  def handle_list(conn, item) do
-    with response <- call(conn, "LIST_GET_NEXT/#{item}/-1", maxItems: 100),
+  def handle_list(conn, item, from \\ -1, items \\ 100) do
+    with response <- call(conn, "LIST_GET_NEXT/#{item}/#{from}", maxItems: items),
          :ok <- Parser.get_response_status(response),
          {:ok, list} <- Parser.parse_list(response) do
       list
@@ -105,7 +105,7 @@ defmodule ExFrontierSilicon.Connector do
       {:ok, %{status: 404}} -> {:error, :not_found}
       {:ok, %{status: 403}} -> {:error, :wrong_pin}
       {:ok, %{status: 500}} -> {:error, :internal_server_error}
-      {:ok, %{status: 200, body: body}} -> IO.inspect(body, label: path)
+      {:ok, %{status: 200, body: body}} -> body
       {:ok, other} -> IO.inspect(other, label: path)
       {:error, :timeout}  ->{:error, :connection_timeout}
     end
@@ -124,7 +124,7 @@ defmodule ExFrontierSilicon.Connector do
   end
 
   defp get_config(key) do
-    {:ok, val} = Application.fetch_env(:ex_frontier_silicon, key)
+    {:ok, val} = Application.fetch_env(:ex_frontier, key)
     val
   end
 end

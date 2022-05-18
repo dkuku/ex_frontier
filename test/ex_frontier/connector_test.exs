@@ -1,9 +1,9 @@
-defmodule ExFrontierSilicon.ConnectorTest do
+defmodule ExFrontier.ConnectorTest do
   use ExUnit.Case, async: true
   import AssertValue
   import Hammox
 
-  alias ExFrontierSilicon.Connector
+  alias ExFrontier.Connector
 
   setup_all do
     conn = %{
@@ -35,7 +35,7 @@ defmodule ExFrontierSilicon.ConnectorTest do
     |> mock_request()
 
     assert_value Connector.connect() ==
-                   %ExFrontierSilicon.Conn{
+                   %ExFrontier.Conn{
                      friendly_name: "speaker",
                      session_id: "96716244",
                      version: "ir-mmi-FS2026-0500-0487_V2.14.33.EX85161-2RC12",
@@ -197,13 +197,13 @@ defmodule ExFrontierSilicon.ConnectorTest do
 
   defp mock_request(body) do
     expect(
-      ExFrontierSilicon.Tesla.Mock,
+      ExFrontier.Tesla.Mock,
       :call,
       fn %{url: url}, _opts ->
         {:ok,
          %Tesla.Env{
            __client__: %Tesla.Client{adapter: nil, fun: nil, post: [], pre: []},
-           __module__: ExFrontierSilicon.Connector,
+           __module__: ExFrontier.Connector,
            body: body,
            headers: [
              {"content-type", "text/xml"},

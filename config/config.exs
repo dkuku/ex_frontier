@@ -11,7 +11,7 @@ config :tesla, adapter: Tesla.Adapter.Hackney
 # Configures Elixir's Logger
 config :logger, :console, format: "$time $metadata[$level] $message\n"
 
-config :ex_frontier_silicon,
+config :ex_frontier,
   hostname: "192.168.1.151",
   max_get_multiple_count: 10,
   path: "device",

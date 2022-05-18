@@ -1,8 +1,8 @@
-defmodule ExAssistant.ExFrontierSilicon.ParserTest do
+defmodule ExFrontier.ParserTest do
   use ExUnit.Case, async: true
 
   import AssertValue
-  alias ExFrontierSilicon.Parser
+  alias ExFrontier.Parser
 
   describe "parse_list/2" do
     test "Deezer response" do

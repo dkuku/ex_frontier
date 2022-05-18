@@ -1,4 +1,4 @@
-defmodule ExFrontierSilicon.Constants do
+defmodule ExFrontier.Constants do
   @play_control %{
     init: 0,
     play: 1,
@@ -209,6 +209,7 @@ defmodule ExFrontierSilicon.Constants do
   def clock, do: @clock
   def wlan, do: @wlan
   def net_remote_play_states(key), do: @net_remote_play_states[key]
+  def net_remote_nav_action_type(key), do: @net_remote_nav_action_type[key]
   def net_remote_clock_source(key), do: @net_remote_clock_source[key]
   def net_remote_time_mode(key), do: @net_remote_time_mode[key]
   def net_remote_wifi_scan(key), do: @net_remote_wifi_scan[key]

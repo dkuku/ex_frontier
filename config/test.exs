@@ -5,4 +5,4 @@ config :logger, level: :warn
 
 config :ex_unit, timeout: :infinity
 
-config :tesla, adapter: ExFrontierSilicon.Tesla.Mock
+config :tesla, adapter: ExFrontier.Tesla.Mock
