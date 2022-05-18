@@ -70,6 +70,336 @@ defmodule ExAssistant.ExFrontierSilicon.ParserTest do
                    ]
     end
 
+    test "radio response" do
+    response = """
+    <fsapiResponse>
+    <status>FS_OK</status>
+    <item key="0">
+    <field name="name"><c8_array>ROCK ANTENNE</c8_array></field>
+    <field name="type"><u8>0</u8></field>
+    <field name="subtype"><u8>0</u8></field>
+    <field name="graphicuri"><c8_array></c8_array></field>
+    <field name="artist"><c8_array></c8_array></field>
+    <field name="contextmenu"><u8>0</u8></field>
+
+    </item>
+    <item key="1">
+    <field name="name"><c8_array>ROCK ANTENNE Bayern</c8_array></field>
+    <field name="type"><u8>1</u8></field>
+    <field name="subtype"><u8>1</u8></field>
+    <field name="graphicuri"><c8_array></c8_array></field>
+    <field name="artist"><c8_array></c8_array></field>
+    <field name="contextmenu"><u8>0</u8></field>
+
+    </item>
+    <item key="2">
+    <field name="name"><c8_array>ROCK ANTENNE Österreich</c8_array></field>
+    <field name="type"><u8>1</u8></field>
+    <field name="subtype"><u8>1</u8></field>
+    <field name="graphicuri"><c8_array></c8_array></field>
+    <field name="artist"><c8_array></c8_array></field>
+    <field name="contextmenu"><u8>0</u8></field>
+
+    </item>
+    <item key="3">
+    <field name="name"><c8_array>ROCK ANTENNE Rock &apos;n&apos; Roll</c8_array></field>
+    <field name="type"><u8>1</u8></field>
+    <field name="subtype"><u8>1</u8></field>
+    <field name="graphicuri"><c8_array></c8_array></field>
+    <field name="artist"><c8_array></c8_array></field>
+    <field name="contextmenu"><u8>0</u8></field>
+
+    </item>
+    <item key="4">
+    <field name="name"><c8_array>ROCK ANTENNE Live Rock</c8_array></field>
+    <field name="type"><u8>1</u8></field>
+    <field name="subtype"><u8>1</u8></field>
+    <field name="graphicuri"><c8_array></c8_array></field>
+    <field name="artist"><c8_array></c8_array></field>
+    <field name="contextmenu"><u8>0</u8></field>
+
+    </item>
+    <item key="5">
+    <field name="name"><c8_array>ROCK ANTENNE Lagerfeuer Rock</c8_array></field>
+    <field name="type"><u8>1</u8></field>
+    <field name="subtype"><u8>1</u8></field>
+    <field name="graphicuri"><c8_array></c8_array></field>
+    <field name="artist"><c8_array></c8_array></field>
+    <field name="contextmenu"><u8>0</u8></field>
+
+    </item>
+    <item key="6">
+    <field name="name"><c8_array>ROCK ANTENNE 80er Rock</c8_array></field>
+    <field name="type"><u8>1</u8></field>
+    <field name="subtype"><u8>1</u8></field>
+    <field name="graphicuri"><c8_array></c8_array></field>
+    <field name="artist"><c8_array></c8_array></field>
+    <field name="contextmenu"><u8>0</u8></field>
+
+    </item>
+    <item key="7">
+    <field name="name"><c8_array>ROCK ANTENNE Symphonic Rock</c8_array></field>
+    <field name="type"><u8>1</u8></field>
+    <field name="subtype"><u8>1</u8></field>
+    <field name="graphicuri"><c8_array></c8_array></field>
+    <field name="artist"><c8_array></c8_array></field>
+    <field name="contextmenu"><u8>0</u8></field>
+
+    </item>
+    <item key="8">
+    <field name="name"><c8_array>ROCK ANTENNE 70er Rock</c8_array></field>
+    <field name="type"><u8>1</u8></field>
+    <field name="subtype"><u8>1</u8></field>
+    <field name="graphicuri"><c8_array></c8_array></field>
+    <field name="artist"><c8_array></c8_array></field>
+    <field name="contextmenu"><u8>0</u8></field>
+
+    </item>
+    <item key="9">
+    <field name="name"><c8_array>ROCK ANTENNE Biker Rock</c8_array></field>
+    <field name="type"><u8>1</u8></field>
+    <field name="subtype"><u8>1</u8></field>
+    <field name="graphicuri"><c8_array></c8_array></field>
+    <field name="artist"><c8_array></c8_array></field>
+    <field name="contextmenu"><u8>0</u8></field>
+
+    </item>
+    <item key="10">
+    <field name="name"><c8_array>ROCK ANTENNE 90er Rock</c8_array></field>
+    <field name="type"><u8>1</u8></field>
+    <field name="subtype"><u8>1</u8></field>
+    <field name="graphicuri"><c8_array></c8_array></field>
+    <field name="artist"><c8_array></c8_array></field>
+    <field name="contextmenu"><u8>0</u8></field>
+
+    </item>
+    <item key="11">
+    <field name="name"><c8_array>ROCK ANTENNE Xmas Rock</c8_array></field>
+    <field name="type"><u8>1</u8></field>
+    <field name="subtype"><u8>1</u8></field>
+    <field name="graphicuri"><c8_array></c8_array></field>
+    <field name="artist"><c8_array></c8_array></field>
+    <field name="contextmenu"><u8>0</u8></field>
+
+    </item>
+    <listend/>
+    </fsapiResponse>
+    """
+      assert {:ok, list} = Parser.parse_list(response)
+
+      assert_value list == [
+                     %{
+                       "artist" => "",
+                       "contextmenu" => 0,
+                       "graphicuri" => "",
+                       "key" => 0,
+                       "name" => "ROCK ANTENNE",
+                       "subtype" => 0,
+                       "type" => 0
+                     },
+                     %{
+                       "artist" => "",
+                       "contextmenu" => 0,
+                       "graphicuri" => "",
+                       "key" => 1,
+                       "name" => "ROCK ANTENNE Bayern",
+                       "subtype" => 1,
+                       "type" => 1
+                     },
+                     %{
+                       "artist" => "",
+                       "contextmenu" => 0,
+                       "graphicuri" => "",
+                       "key" => 2,
+                       "name" => "ROCK ANTENNE Österreich",
+                       "subtype" => 1,
+                       "type" => 1
+                     },
+                     %{
+                       "artist" => "",
+                       "contextmenu" => 0,
+                       "graphicuri" => "",
+                       "key" => 3,
+                       "name" => "ROCK ANTENNE Rock 'n' Roll",
+                       "subtype" => 1,
+                       "type" => 1
+                     },
+                     %{
+                       "artist" => "",
+                       "contextmenu" => 0,
+                       "graphicuri" => "",
+                       "key" => 4,
+                       "name" => "ROCK ANTENNE Live Rock",
+                       "subtype" => 1,
+                       "type" => 1
+                     },
+                     %{
+                       "artist" => "",
+                       "contextmenu" => 0,
+                       "graphicuri" => "",
+                       "key" => 5,
+                       "name" => "ROCK ANTENNE Lagerfeuer Rock",
+                       "subtype" => 1,
+                       "type" => 1
+                     },
+                     %{
+                       "artist" => "",
+                       "contextmenu" => 0,
+                       "graphicuri" => "",
+                       "key" => 6,
+                       "name" => "ROCK ANTENNE 80er Rock",
+                       "subtype" => 1,
+                       "type" => 1
+                     },
+                     %{
+                       "artist" => "",
+                       "contextmenu" => 0,
+                       "graphicuri" => "",
+                       "key" => 7,
+                       "name" => "ROCK ANTENNE Symphonic Rock",
+                       "subtype" => 1,
+                       "type" => 1
+                     },
+                     %{
+                       "artist" => "",
+                       "contextmenu" => 0,
+                       "graphicuri" => "",
+                       "key" => 8,
+                       "name" => "ROCK ANTENNE 70er Rock",
+                       "subtype" => 1,
+                       "type" => 1
+                     },
+                     %{
+                       "artist" => "",
+                       "contextmenu" => 0,
+                       "graphicuri" => "",
+                       "key" => 9,
+                       "name" => "ROCK ANTENNE Biker Rock",
+                       "subtype" => 1,
+                       "type" => 1
+                     },
+                     %{
+                       "artist" => "",
+                       "contextmenu" => 0,
+                       "graphicuri" => "",
+                       "key" => 10,
+                       "name" => "ROCK ANTENNE 90er Rock",
+                       "subtype" => 1,
+                       "type" => 1
+                     },
+                     %{
+                       "artist" => "",
+                       "contextmenu" => 0,
+                       "graphicuri" => "",
+                       "key" => 11,
+                       "name" => "ROCK ANTENNE Xmas Rock",
+                       "subtype" => 1,
+                       "type" => 1
+                     }
+                   ]
+    end
+      test "radio sub response after 0xffffffff" do
+    response = """
+    <fsapiResponse>
+    <status>FS_OK</status>
+    <item key="0">
+    <field name="name"><c8_array>Location</c8_array></field>
+    <field name="type"><u8>0</u8></field>
+    <field name="subtype"><u8>0</u8></field>
+    <field name="graphicuri"><c8_array></c8_array></field>
+    <field name="artist"><c8_array></c8_array></field>
+    <field name="contextmenu"><u8>0</u8></field>
+
+    </item>
+    <item key="1">
+    <field name="name"><c8_array>Genre</c8_array></field>
+    <field name="type"><u8>0</u8></field>
+    <field name="subtype"><u8>0</u8></field>
+    <field name="graphicuri"><c8_array></c8_array></field>
+    <field name="artist"><c8_array></c8_array></field>
+    <field name="contextmenu"><u8>0</u8></field>
+
+    </item>
+    <item key="2">
+    <field name="name"><c8_array>Search stations</c8_array></field>
+    <field name="type"><u8>2</u8></field>
+    <field name="subtype"><u8>0</u8></field>
+    <field name="graphicuri"><c8_array></c8_array></field>
+    <field name="artist"><c8_array></c8_array></field>
+    <field name="contextmenu"><u8>0</u8></field>
+
+    </item>
+    <item key="3">
+    <field name="name"><c8_array>Popular stations</c8_array></field>
+    <field name="type"><u8>0</u8></field>
+    <field name="subtype"><u8>0</u8></field>
+    <field name="graphicuri"><c8_array></c8_array></field>
+    <field name="artist"><c8_array></c8_array></field>
+    <field name="contextmenu"><u8>0</u8></field>
+
+    </item>
+    <item key="4">
+    <field name="name"><c8_array>New stations</c8_array></field>
+    <field name="type"><u8>0</u8></field>
+    <field name="subtype"><u8>0</u8></field>
+    <field name="graphicuri"><c8_array></c8_array></field>
+    <field name="artist"><c8_array></c8_array></field>
+    <field name="contextmenu"><u8>0</u8></field>
+
+    </item>
+    <listend/>
+    </fsapiResponse>
+    """
+      assert {:ok, list} = Parser.parse_list(response)
+
+      assert_value list == [
+                     %{
+                       "artist" => "",
+                       "contextmenu" => 0,
+                       "graphicuri" => "",
+                       "key" => 0,
+                       "name" => "Location",
+                       "subtype" => 0,
+                       "type" => 0
+                     },
+                     %{
+                       "artist" => "",
+                       "contextmenu" => 0,
+                       "graphicuri" => "",
+                       "key" => 1,
+                       "name" => "Genre",
+                       "subtype" => 0,
+                       "type" => 0
+                     },
+                     %{
+                       "artist" => "",
+                       "contextmenu" => 0,
+                       "graphicuri" => "",
+                       "key" => 2,
+                       "name" => "Search stations",
+                       "subtype" => 0,
+                       "type" => 2
+                     },
+                     %{
+                       "artist" => "",
+                       "contextmenu" => 0,
+                       "graphicuri" => "",
+                       "key" => 3,
+                       "name" => "Popular stations",
+                       "subtype" => 0,
+                       "type" => 0
+                     },
+                     %{
+                       "artist" => "",
+                       "contextmenu" => 0,
+                       "graphicuri" => "",
+                       "key" => 4,
+                       "name" => "New stations",
+                       "subtype" => 0,
+                       "type" => 0
+                     }
+                   ]
+      end
     test "response" do
       response = """
       <fsapiResponse>
