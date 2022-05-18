@@ -1,4 +1,4 @@
-# ExAssistant
+# ExFrontier
 
 ## config
     config :ex_frontier,
