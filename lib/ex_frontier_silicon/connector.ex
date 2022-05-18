@@ -102,8 +102,12 @@ defmodule ExFrontierSilicon.Connector do
     |> Kernel.<>("?" <> query_params)
     |> get()
     |> case do
-      {:ok, %{body: body}} -> body
-      {:error, :timeout} = e -> e
+      {:ok, %{status: 404}} -> {:error, :not_found}
+      {:ok, %{status: 403}} -> {:error, :wrong_pin}
+      {:ok, %{status: 500}} -> {:error, :internal_server_error}
+      {:ok, %{status: 200, body: body}} -> IO.inspect(body, label: path)
+      {:ok, other} -> IO.inspect(other, label: path)
+      {:error, :timeout}  ->{:error, :connection_timeout}
     end
   end
 

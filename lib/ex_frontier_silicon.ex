@@ -95,7 +95,7 @@ defmodule ExFrontierSilicon do
 
   def get_mode(conn) do
     mode = Connector.handle_get(conn, "netRemote.sys.mode")
-    Enum.find(get_modes(conn), fn %{key: key} -> key == mode end)
+    Enum.find(get_modes(conn), fn %{"key" => key} -> key == mode end)
   end
 
   def get_eq_modes(conn) do
@@ -110,24 +110,28 @@ defmodule ExFrontierSilicon do
     Connector.handle_list(conn, "netRemote.sys.caps.validModes")
   end
 
+  def init_radio(conn) do
+    play_control(conn, :init)
+  end
+
   def play(conn) do
-    play_control(conn, 1)
+    play_control(conn, :play)
   end
 
   def pause(conn) do
-    play_control(conn, 2)
+    play_control(conn, :pause)
   end
 
   def forward(conn) do
-    play_control(conn, 3)
+    play_control(conn, :forward)
   end
 
   def rewind(conn) do
-    play_control(conn, 4)
+    play_control(conn, :rewind)
   end
 
   def play_control(conn, value) do
-    Connector.handle_set(conn, "netRemote.play.control", value)
+    Connector.handle_set(conn, "netRemote.play.control", Constants.play_control(value))
   end
 
   def set_volume(conn, value) do
@@ -148,5 +152,53 @@ defmodule ExFrontierSilicon do
 
   def set_mode(conn, mode) do
     Connector.handle_set(conn, "netRemote.sys.mode", mode)
+  end
+
+  def nav_reset(conn) do
+    nav(conn, -1)
+  end
+
+  def nav(conn, value) do
+    Connector.handle_set(conn, "netRemote.nav.action.navigate", value)
+  end
+
+  def nav_into_sub(conn, value) do
+    nav(conn, "0xffffffff")
+  end
+
+  def nav_select(conn) do
+    Connector.handle_set(conn, "netRemote.nav.action.selectItem", value)
+  end
+
+  def search(conn, value) do
+    Connector.handle_set(conn, "netRemote.nav.searchTerm", value)
+  end
+
+  def nav_num_items(conn) do
+    Connector.handle_get(conn, "netRemote.nav.numItems")
+  end
+
+  def nav_menu(conn) do
+    ExFrontierSilicon.Connector.handle_list(conn, "netRemote.nav.list")
+  end
+
+  def get_status(conn) do
+    Connector.handle_get(conn, "netRemote.nav.status")
+  end
+
+  def nav_state(conn) do
+    Connector.handle_get(conn, "netRemote.nav.state")
+  end
+
+  def nav_disable(conn) do
+    Connector.handle_set(conn, "netRemote.nav.state", 0)
+  end
+
+  def nav_enable(conn) do
+    Connector.handle_set(conn, "netRemote.nav.state", 1)
+  end
+
+  def get_notifies(conn) do
+    Connector.handle_get_notifies(conn)
   end
 end

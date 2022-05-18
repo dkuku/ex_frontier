@@ -1,9 +1,21 @@
 defmodule ExFrontierSilicon.Constants do
+  @play_control %{
+    init: 0,
+    play: 1,
+    pause: 2,
+    forward: 3,
+    rewind: 4
+  }
   @net_remote_play_states %{
     0 => :stopped,
-    1 => :unknown,
+    1 => :loading,
     2 => :playing,
     3 => :paused
+  }
+  @net_remote_nav_action_type %{
+    0 => :map,
+    1 => :mp3,
+    2 => :mp4
   }
   @net_remote_clock_source %{
     0 => :none,
@@ -64,16 +76,17 @@ defmodule ExFrontierSilicon.Constants do
     "netRemote.play.info.album",
     "netRemote.play.info.artist",
     "netRemote.play.info.description",
-    "netRemote.play.info.duration",
     "netRemote.play.info.graphicUri",
     "netRemote.play.info.name",
     "netRemote.play.info.text",
+    "netRemote.play.info.duration",
     "netRemote.play.position",
-    "netRemote.play.shuffle",
+    "netRemote.play.rate",
     "netRemote.play.status"
   ]
   @play_current [
     "netRemote.play.caps",
+    "netRemote.play.rate",
     "netRemote.play.position",
     "netRemote.play.shuffle",
     "netRemote.play.status"
@@ -148,6 +161,7 @@ defmodule ExFrontierSilicon.Constants do
   ]
   @set [
     "netRemote.nav.action.navigate",
+    "netRemote.nav.searchTerm",
     "netRemote.nav.action.selectItem",
     "netRemote.nav.encformData",
     "netRemote.nav.preset.delete",
@@ -155,6 +169,7 @@ defmodule ExFrontierSilicon.Constants do
     "netRemote.play.addPreset",
     "netRemote.play.control",
     "netRemote.play.repeat",
+    "netRemote.play.rate",
     "netRemote.play.shuffle",
     "netRemote.sys.audio.airableQuality",
     "netRemote.sys.audio.eqPreset",
@@ -202,4 +217,7 @@ defmodule ExFrontierSilicon.Constants do
   def net_remote_isu_state(key), do: @net_remote_isu_state[key]
   def net_remote_isu_control(key), do: @net_remote_isu_control[key]
   def net_remote_rsa_status(key), do: @net_remote_rsa_status[key]
+
+  def play_control(key) when is_integer(key), do: key
+  def play_control(key) when is_atom(key), do: @play_control[key]
 end
