@@ -5,12 +5,14 @@ defmodule ExFrontier.Connector do
 
   def connect do
     case get(hostname()) do
-      {:ok, %{body: body}}  -> 
-    body
-    |> Parser.parse_connect()
-    |> append_session()
-      {:error, error} -> Logger.error(error)
-  end
+      {:ok, %{body: body}} ->
+        body
+        |> Parser.parse_connect()
+        |> append_session()
+
+      {:error, error} ->
+        Logger.error(error)
+    end
   end
 
   defp append_session(conn) do
@@ -107,7 +109,7 @@ defmodule ExFrontier.Connector do
       {:ok, %{status: 500}} -> {:error, :internal_server_error}
       {:ok, %{status: 200, body: body}} -> body
       {:ok, other} -> IO.inspect(other, label: path)
-      {:error, :timeout}  ->{:error, :connection_timeout}
+      {:error, :timeout} -> {:error, :connection_timeout}
     end
   end
 

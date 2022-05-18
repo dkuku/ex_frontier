@@ -71,120 +71,121 @@ defmodule ExFrontier.ParserTest do
     end
 
     test "radio response" do
-    response = """
-    <fsapiResponse>
-    <status>FS_OK</status>
-    <item key="0">
-    <field name="name"><c8_array>ROCK ANTENNE</c8_array></field>
-    <field name="type"><u8>0</u8></field>
-    <field name="subtype"><u8>0</u8></field>
-    <field name="graphicuri"><c8_array></c8_array></field>
-    <field name="artist"><c8_array></c8_array></field>
-    <field name="contextmenu"><u8>0</u8></field>
+      response = """
+      <fsapiResponse>
+      <status>FS_OK</status>
+      <item key="0">
+      <field name="name"><c8_array>ROCK ANTENNE</c8_array></field>
+      <field name="type"><u8>0</u8></field>
+      <field name="subtype"><u8>0</u8></field>
+      <field name="graphicuri"><c8_array></c8_array></field>
+      <field name="artist"><c8_array></c8_array></field>
+      <field name="contextmenu"><u8>0</u8></field>
 
-    </item>
-    <item key="1">
-    <field name="name"><c8_array>ROCK ANTENNE Bayern</c8_array></field>
-    <field name="type"><u8>1</u8></field>
-    <field name="subtype"><u8>1</u8></field>
-    <field name="graphicuri"><c8_array></c8_array></field>
-    <field name="artist"><c8_array></c8_array></field>
-    <field name="contextmenu"><u8>0</u8></field>
+      </item>
+      <item key="1">
+      <field name="name"><c8_array>ROCK ANTENNE Bayern</c8_array></field>
+      <field name="type"><u8>1</u8></field>
+      <field name="subtype"><u8>1</u8></field>
+      <field name="graphicuri"><c8_array></c8_array></field>
+      <field name="artist"><c8_array></c8_array></field>
+      <field name="contextmenu"><u8>0</u8></field>
 
-    </item>
-    <item key="2">
-    <field name="name"><c8_array>ROCK ANTENNE Österreich</c8_array></field>
-    <field name="type"><u8>1</u8></field>
-    <field name="subtype"><u8>1</u8></field>
-    <field name="graphicuri"><c8_array></c8_array></field>
-    <field name="artist"><c8_array></c8_array></field>
-    <field name="contextmenu"><u8>0</u8></field>
+      </item>
+      <item key="2">
+      <field name="name"><c8_array>ROCK ANTENNE Österreich</c8_array></field>
+      <field name="type"><u8>1</u8></field>
+      <field name="subtype"><u8>1</u8></field>
+      <field name="graphicuri"><c8_array></c8_array></field>
+      <field name="artist"><c8_array></c8_array></field>
+      <field name="contextmenu"><u8>0</u8></field>
 
-    </item>
-    <item key="3">
-    <field name="name"><c8_array>ROCK ANTENNE Rock &apos;n&apos; Roll</c8_array></field>
-    <field name="type"><u8>1</u8></field>
-    <field name="subtype"><u8>1</u8></field>
-    <field name="graphicuri"><c8_array></c8_array></field>
-    <field name="artist"><c8_array></c8_array></field>
-    <field name="contextmenu"><u8>0</u8></field>
+      </item>
+      <item key="3">
+      <field name="name"><c8_array>ROCK ANTENNE Rock &apos;n&apos; Roll</c8_array></field>
+      <field name="type"><u8>1</u8></field>
+      <field name="subtype"><u8>1</u8></field>
+      <field name="graphicuri"><c8_array></c8_array></field>
+      <field name="artist"><c8_array></c8_array></field>
+      <field name="contextmenu"><u8>0</u8></field>
 
-    </item>
-    <item key="4">
-    <field name="name"><c8_array>ROCK ANTENNE Live Rock</c8_array></field>
-    <field name="type"><u8>1</u8></field>
-    <field name="subtype"><u8>1</u8></field>
-    <field name="graphicuri"><c8_array></c8_array></field>
-    <field name="artist"><c8_array></c8_array></field>
-    <field name="contextmenu"><u8>0</u8></field>
+      </item>
+      <item key="4">
+      <field name="name"><c8_array>ROCK ANTENNE Live Rock</c8_array></field>
+      <field name="type"><u8>1</u8></field>
+      <field name="subtype"><u8>1</u8></field>
+      <field name="graphicuri"><c8_array></c8_array></field>
+      <field name="artist"><c8_array></c8_array></field>
+      <field name="contextmenu"><u8>0</u8></field>
 
-    </item>
-    <item key="5">
-    <field name="name"><c8_array>ROCK ANTENNE Lagerfeuer Rock</c8_array></field>
-    <field name="type"><u8>1</u8></field>
-    <field name="subtype"><u8>1</u8></field>
-    <field name="graphicuri"><c8_array></c8_array></field>
-    <field name="artist"><c8_array></c8_array></field>
-    <field name="contextmenu"><u8>0</u8></field>
+      </item>
+      <item key="5">
+      <field name="name"><c8_array>ROCK ANTENNE Lagerfeuer Rock</c8_array></field>
+      <field name="type"><u8>1</u8></field>
+      <field name="subtype"><u8>1</u8></field>
+      <field name="graphicuri"><c8_array></c8_array></field>
+      <field name="artist"><c8_array></c8_array></field>
+      <field name="contextmenu"><u8>0</u8></field>
 
-    </item>
-    <item key="6">
-    <field name="name"><c8_array>ROCK ANTENNE 80er Rock</c8_array></field>
-    <field name="type"><u8>1</u8></field>
-    <field name="subtype"><u8>1</u8></field>
-    <field name="graphicuri"><c8_array></c8_array></field>
-    <field name="artist"><c8_array></c8_array></field>
-    <field name="contextmenu"><u8>0</u8></field>
+      </item>
+      <item key="6">
+      <field name="name"><c8_array>ROCK ANTENNE 80er Rock</c8_array></field>
+      <field name="type"><u8>1</u8></field>
+      <field name="subtype"><u8>1</u8></field>
+      <field name="graphicuri"><c8_array></c8_array></field>
+      <field name="artist"><c8_array></c8_array></field>
+      <field name="contextmenu"><u8>0</u8></field>
 
-    </item>
-    <item key="7">
-    <field name="name"><c8_array>ROCK ANTENNE Symphonic Rock</c8_array></field>
-    <field name="type"><u8>1</u8></field>
-    <field name="subtype"><u8>1</u8></field>
-    <field name="graphicuri"><c8_array></c8_array></field>
-    <field name="artist"><c8_array></c8_array></field>
-    <field name="contextmenu"><u8>0</u8></field>
+      </item>
+      <item key="7">
+      <field name="name"><c8_array>ROCK ANTENNE Symphonic Rock</c8_array></field>
+      <field name="type"><u8>1</u8></field>
+      <field name="subtype"><u8>1</u8></field>
+      <field name="graphicuri"><c8_array></c8_array></field>
+      <field name="artist"><c8_array></c8_array></field>
+      <field name="contextmenu"><u8>0</u8></field>
 
-    </item>
-    <item key="8">
-    <field name="name"><c8_array>ROCK ANTENNE 70er Rock</c8_array></field>
-    <field name="type"><u8>1</u8></field>
-    <field name="subtype"><u8>1</u8></field>
-    <field name="graphicuri"><c8_array></c8_array></field>
-    <field name="artist"><c8_array></c8_array></field>
-    <field name="contextmenu"><u8>0</u8></field>
+      </item>
+      <item key="8">
+      <field name="name"><c8_array>ROCK ANTENNE 70er Rock</c8_array></field>
+      <field name="type"><u8>1</u8></field>
+      <field name="subtype"><u8>1</u8></field>
+      <field name="graphicuri"><c8_array></c8_array></field>
+      <field name="artist"><c8_array></c8_array></field>
+      <field name="contextmenu"><u8>0</u8></field>
 
-    </item>
-    <item key="9">
-    <field name="name"><c8_array>ROCK ANTENNE Biker Rock</c8_array></field>
-    <field name="type"><u8>1</u8></field>
-    <field name="subtype"><u8>1</u8></field>
-    <field name="graphicuri"><c8_array></c8_array></field>
-    <field name="artist"><c8_array></c8_array></field>
-    <field name="contextmenu"><u8>0</u8></field>
+      </item>
+      <item key="9">
+      <field name="name"><c8_array>ROCK ANTENNE Biker Rock</c8_array></field>
+      <field name="type"><u8>1</u8></field>
+      <field name="subtype"><u8>1</u8></field>
+      <field name="graphicuri"><c8_array></c8_array></field>
+      <field name="artist"><c8_array></c8_array></field>
+      <field name="contextmenu"><u8>0</u8></field>
 
-    </item>
-    <item key="10">
-    <field name="name"><c8_array>ROCK ANTENNE 90er Rock</c8_array></field>
-    <field name="type"><u8>1</u8></field>
-    <field name="subtype"><u8>1</u8></field>
-    <field name="graphicuri"><c8_array></c8_array></field>
-    <field name="artist"><c8_array></c8_array></field>
-    <field name="contextmenu"><u8>0</u8></field>
+      </item>
+      <item key="10">
+      <field name="name"><c8_array>ROCK ANTENNE 90er Rock</c8_array></field>
+      <field name="type"><u8>1</u8></field>
+      <field name="subtype"><u8>1</u8></field>
+      <field name="graphicuri"><c8_array></c8_array></field>
+      <field name="artist"><c8_array></c8_array></field>
+      <field name="contextmenu"><u8>0</u8></field>
 
-    </item>
-    <item key="11">
-    <field name="name"><c8_array>ROCK ANTENNE Xmas Rock</c8_array></field>
-    <field name="type"><u8>1</u8></field>
-    <field name="subtype"><u8>1</u8></field>
-    <field name="graphicuri"><c8_array></c8_array></field>
-    <field name="artist"><c8_array></c8_array></field>
-    <field name="contextmenu"><u8>0</u8></field>
+      </item>
+      <item key="11">
+      <field name="name"><c8_array>ROCK ANTENNE Xmas Rock</c8_array></field>
+      <field name="type"><u8>1</u8></field>
+      <field name="subtype"><u8>1</u8></field>
+      <field name="graphicuri"><c8_array></c8_array></field>
+      <field name="artist"><c8_array></c8_array></field>
+      <field name="contextmenu"><u8>0</u8></field>
 
-    </item>
-    <listend/>
-    </fsapiResponse>
-    """
+      </item>
+      <listend/>
+      </fsapiResponse>
+      """
+
       assert {:ok, list} = Parser.parse_list(response)
 
       assert_value list == [
@@ -298,58 +299,60 @@ defmodule ExFrontier.ParserTest do
                      }
                    ]
     end
-      test "radio sub response after 0xffffffff" do
-    response = """
-    <fsapiResponse>
-    <status>FS_OK</status>
-    <item key="0">
-    <field name="name"><c8_array>Location</c8_array></field>
-    <field name="type"><u8>0</u8></field>
-    <field name="subtype"><u8>0</u8></field>
-    <field name="graphicuri"><c8_array></c8_array></field>
-    <field name="artist"><c8_array></c8_array></field>
-    <field name="contextmenu"><u8>0</u8></field>
 
-    </item>
-    <item key="1">
-    <field name="name"><c8_array>Genre</c8_array></field>
-    <field name="type"><u8>0</u8></field>
-    <field name="subtype"><u8>0</u8></field>
-    <field name="graphicuri"><c8_array></c8_array></field>
-    <field name="artist"><c8_array></c8_array></field>
-    <field name="contextmenu"><u8>0</u8></field>
+    test "radio sub response after 0xffffffff" do
+      response = """
+      <fsapiResponse>
+      <status>FS_OK</status>
+      <item key="0">
+      <field name="name"><c8_array>Location</c8_array></field>
+      <field name="type"><u8>0</u8></field>
+      <field name="subtype"><u8>0</u8></field>
+      <field name="graphicuri"><c8_array></c8_array></field>
+      <field name="artist"><c8_array></c8_array></field>
+      <field name="contextmenu"><u8>0</u8></field>
 
-    </item>
-    <item key="2">
-    <field name="name"><c8_array>Search stations</c8_array></field>
-    <field name="type"><u8>2</u8></field>
-    <field name="subtype"><u8>0</u8></field>
-    <field name="graphicuri"><c8_array></c8_array></field>
-    <field name="artist"><c8_array></c8_array></field>
-    <field name="contextmenu"><u8>0</u8></field>
+      </item>
+      <item key="1">
+      <field name="name"><c8_array>Genre</c8_array></field>
+      <field name="type"><u8>0</u8></field>
+      <field name="subtype"><u8>0</u8></field>
+      <field name="graphicuri"><c8_array></c8_array></field>
+      <field name="artist"><c8_array></c8_array></field>
+      <field name="contextmenu"><u8>0</u8></field>
 
-    </item>
-    <item key="3">
-    <field name="name"><c8_array>Popular stations</c8_array></field>
-    <field name="type"><u8>0</u8></field>
-    <field name="subtype"><u8>0</u8></field>
-    <field name="graphicuri"><c8_array></c8_array></field>
-    <field name="artist"><c8_array></c8_array></field>
-    <field name="contextmenu"><u8>0</u8></field>
+      </item>
+      <item key="2">
+      <field name="name"><c8_array>Search stations</c8_array></field>
+      <field name="type"><u8>2</u8></field>
+      <field name="subtype"><u8>0</u8></field>
+      <field name="graphicuri"><c8_array></c8_array></field>
+      <field name="artist"><c8_array></c8_array></field>
+      <field name="contextmenu"><u8>0</u8></field>
 
-    </item>
-    <item key="4">
-    <field name="name"><c8_array>New stations</c8_array></field>
-    <field name="type"><u8>0</u8></field>
-    <field name="subtype"><u8>0</u8></field>
-    <field name="graphicuri"><c8_array></c8_array></field>
-    <field name="artist"><c8_array></c8_array></field>
-    <field name="contextmenu"><u8>0</u8></field>
+      </item>
+      <item key="3">
+      <field name="name"><c8_array>Popular stations</c8_array></field>
+      <field name="type"><u8>0</u8></field>
+      <field name="subtype"><u8>0</u8></field>
+      <field name="graphicuri"><c8_array></c8_array></field>
+      <field name="artist"><c8_array></c8_array></field>
+      <field name="contextmenu"><u8>0</u8></field>
 
-    </item>
-    <listend/>
-    </fsapiResponse>
-    """
+      </item>
+      <item key="4">
+      <field name="name"><c8_array>New stations</c8_array></field>
+      <field name="type"><u8>0</u8></field>
+      <field name="subtype"><u8>0</u8></field>
+      <field name="graphicuri"><c8_array></c8_array></field>
+      <field name="artist"><c8_array></c8_array></field>
+      <field name="contextmenu"><u8>0</u8></field>
+
+      </item>
+      <listend/>
+      </fsapiResponse>
+      """
+
       assert {:ok, list} = Parser.parse_list(response)
 
       assert_value list == [
@@ -399,7 +402,8 @@ defmodule ExFrontier.ParserTest do
                        "type" => 0
                      }
                    ]
-      end
+    end
+
     test "response" do
       response = """
       <fsapiResponse>

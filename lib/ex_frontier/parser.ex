@@ -174,6 +174,7 @@ defmodule ExFrontier.Parser do
     do: int_to_ip(value)
 
   def postprocess_response(value, type, _), do: parse_by_type(value, type)
+
   defp parse_by_type(value, type) do
     case type do
       # check this line
