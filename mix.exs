@@ -69,7 +69,7 @@ defmodule ExFrontier.MixProject do
       source_ref: "v#{@version}",
       extras: [
         "README.md",
-        "CHANGELOG.md"
+        "FSAPI.md"
       ]
     ]
   end
