@@ -49,11 +49,11 @@ defmodule ExFrontier.MixProject do
 
   defp deps do
     [
-      {:telemetry_metrics, "~> 0.6"},
+      {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
       {:tesla, "~> 1.4"},
       {:hackney, "~> 1.17"},
-      {:sweet_xml, "~> 0.7.1"},
+      {:sweet_xml, "~> 0.7"},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
