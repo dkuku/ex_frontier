@@ -2,6 +2,7 @@ defmodule ExFrontier.ParserTest do
   use ExUnit.Case, async: true
 
   import AssertValue
+
   alias ExFrontier.Parser
 
   describe "parse_list/2" do

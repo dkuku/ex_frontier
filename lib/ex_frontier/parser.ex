@@ -1,5 +1,7 @@
 defmodule ExFrontier.Parser do
+  @moduledoc false
   import SweetXml
+
   alias ExFrontier.Conn
 
   def parse_value(response) do
@@ -73,7 +75,7 @@ defmodule ExFrontier.Parser do
             ~x"./field"l,
             key: ~x"./@name"s,
             value: ~x"./*[1]/text()"s,
-            type: ~x"./*" |> transform_by(&elem(&1, 1))
+            type: transform_by(~x"./*", &elem(&1, 1))
           ]
         ]
       )
@@ -81,10 +83,13 @@ defmodule ExFrontier.Parser do
     parsed_list =
       Enum.map(
         items,
-        &Enum.reduce(&1.fields, %{"key" => &1.key}, fn %{key: key, value: value, type: type},
-                                                       acc ->
-          Map.put(acc, key, parse_by_type(value, type))
-        end)
+        &Enum.reduce(
+          &1.fields,
+          %{"key" => &1.key},
+          fn %{key: key, value: value, type: type}, acc ->
+            Map.put(acc, key, parse_by_type(value, type))
+          end
+        )
       )
 
     {:ok, parsed_list}
@@ -99,14 +104,13 @@ defmodule ExFrontier.Parser do
 
   def parse_get_multiple(response) do
     %{items: items} =
-      response
-      |> xmap(
+      xmap(response,
         items: [
           ~x"/fsapiGetMultipleResponse/fsapiResponse"l,
           key: ~x"./node/text()"s,
-          status: ~x"./status/text()"s |> transform_by(&get_status/1),
+          status: transform_by(~x"./status/text()"s, &get_status/1),
           value: ~x"./value/*[1]/text()"S,
-          type: ~x"./value/*"o |> transform_by(&maybe_get_type/1)
+          type: transform_by(~x"./value/*"o, &maybe_get_type/1)
         ]
       )
 
@@ -127,12 +131,11 @@ defmodule ExFrontier.Parser do
 
   def parse_set_multiple(response) do
     %{items: items} =
-      response
-      |> xmap(
+      xmap(response,
         items: [
           ~x"/fsapiSetMultipleResponse/fsapiResponse"l,
           key: ~x"./node/text()"s,
-          status: ~x"./status/text()"s |> transform_by(&get_status/1)
+          status: transform_by(~x"./status/text()"s, &get_status/1)
         ]
       )
 
@@ -147,14 +150,13 @@ defmodule ExFrontier.Parser do
 
   def parse_get_notifies(response) do
     %{items: items, status: status} =
-      response
-      |> xmap(
-        status: ~x"/fsapiResponse/status/text()"s |> transform_by(&get_status/1),
+      xmap(response,
+        status: transform_by(~x"/fsapiResponse/status/text()"s, &get_status/1),
         items: [
           ~x"/fsapiResponse/notify"l,
           key: ~x"./@node"s,
           value: ~x"./value/*[1]/text()"S,
-          type: ~x"./value/*"o |> transform_by(&maybe_get_type/1)
+          type: transform_by(~x"./value/*"o, &maybe_get_type/1)
         ]
       )
 
@@ -170,8 +172,7 @@ defmodule ExFrontier.Parser do
     end
   end
 
-  def postprocess_response(value, _, "netRemote.sys.net.ipConfig." <> item) when item != "dhcp",
-    do: int_to_ip(value)
+  def postprocess_response(value, _, "netRemote.sys.net.ipConfig." <> item) when item != "dhcp", do: int_to_ip(value)
 
   def postprocess_response(value, type, _), do: parse_by_type(value, type)
 

@@ -26,14 +26,14 @@ defmodule ExFrontier.MixProject do
     ]
   end
 
-  defp description() do
+  defp description do
     """
     Helper library to connect to Frontier radios
     Also known under the name Frontier Silicon
     """
   end
 
-  defp package() do
+  defp package do
     [
       files: ~w(lib .formatter.exs mix.exs README* CHANGELOG*),
       licenses: ["Apache-2.0"],
@@ -57,6 +57,7 @@ defmodule ExFrontier.MixProject do
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
+      {:styler, "~> 1.4", only: [:dev, :test], runtime: false},
       {:assert_value, ">= 0.0.0", only: [:dev, :test]},
       {:hammox, "~> 0.5", only: :test}
     ]

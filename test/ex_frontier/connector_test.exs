@@ -1,5 +1,6 @@
 defmodule ExFrontier.ConnectorTest do
   use ExUnit.Case, async: true
+
   import AssertValue
   import Hammox
 
@@ -17,22 +18,20 @@ defmodule ExFrontier.ConnectorTest do
   end
 
   test "connect" do
-    """
+    mock_request("""
     <netRemote>
     <friendlyName>speaker</friendlyName>
     <version>ir-mmi-FS2026-0500-0487_V2.14.33.EX85161-2RC12</version>
     <webfsapi>http://192.168.1.151:80/fsapi</webfsapi>
     </netRemote>
-    """
-    |> mock_request()
+    """)
 
-    """
+    mock_request("""
     <fsapiResponse>
     <status>FS_OK</status>
     <sessionId>96716244</sessionId>
     </fsapiResponse>
-    """
-    |> mock_request()
+    """)
 
     assert_value Connector.connect() ==
                    %ExFrontier.Conn{
@@ -44,32 +43,30 @@ defmodule ExFrontier.ConnectorTest do
   end
 
   test "handle_get", %{conn: conn} do
-    """
+    mock_request("""
     <fsapiResponse>
     <status>FS_OK</status>
     <value><c8_array>ROCK ANTENNE</c8_array></value>
     </fsapiResponse>
-    """
-    |> mock_request()
+    """)
 
     response = Connector.handle_get(conn, "netRemote.play.info.name")
     assert_value response == "ROCK ANTENNE"
   end
 
   test "handle_set", %{conn: conn} do
-    """
+    mock_request("""
     <fsapiResponse>
     <status>FS_OK</status>
     </fsapiResponse>
-    """
-    |> mock_request()
+    """)
 
     response = Connector.handle_set(conn, "netRemote.play.info.name", "speaker")
     assert_value response == :ok
   end
 
   test "handle_set_multiple", %{conn: conn} do
-    """
+    mock_request("""
     <fsapiSetMultipleResponse>
     <fsapiResponse>
     <node>netRemote.nav.searchTerm</node>
@@ -80,8 +77,7 @@ defmodule ExFrontier.ConnectorTest do
     <status>FS_OK</status>
     </fsapiResponse>
     </fsapiSetMultipleResponse>
-    """
-    |> mock_request()
+    """)
 
     response =
       Connector.handle_set_multiple(conn, [
@@ -92,12 +88,11 @@ defmodule ExFrontier.ConnectorTest do
       ])
 
     assert_value response ==
-                   {:ok,
-                    %{"netRemote.nav.action.navigate" => :ok, "netRemote.nav.searchTerm" => :ok}}
+                   {:ok, %{"netRemote.nav.action.navigate" => :ok, "netRemote.nav.searchTerm" => :ok}}
   end
 
   test "handle_get_multiple", %{conn: conn} do
-    """
+    mock_request("""
     <fsapiGetMultipleResponse>
     <fsapiResponse>
     <node>netRemote.sys.info.version</node>
@@ -110,8 +105,7 @@ defmodule ExFrontier.ConnectorTest do
     <value><c8_array>002261F6D662</c8_array></value>
     </fsapiResponse>
     </fsapiGetMultipleResponse>
-    """
-    |> mock_request()
+    """)
 
     response =
       Connector.handle_get_multiple(conn, [
@@ -123,21 +117,19 @@ defmodule ExFrontier.ConnectorTest do
                    {:ok,
                     %{
                       "netRemote.sys.info.radioId" => "002261F6D662",
-                      "netRemote.sys.info.version" =>
-                        "ir-mmi-FS2026-0500-0487_V2.14.33.EX85161-2RC12"
+                      "netRemote.sys.info.version" => "ir-mmi-FS2026-0500-0487_V2.14.33.EX85161-2RC12"
                     }}
   end
 
   test "handle_get_notifies", %{conn: conn} do
-    """
+    mock_request("""
     <fsapiResponse>
     <status>FS_OK</status>
     <notify node="netremote.play.info.text">
     <value><c8_array>Rammstein - Zeit</c8_array></value>
     </notify>
     </fsapiResponse>
-    """
-    |> mock_request()
+    """)
 
     response = Connector.handle_get_notifies(conn)
 
@@ -145,7 +137,7 @@ defmodule ExFrontier.ConnectorTest do
   end
 
   test "handle_list", %{conn: conn} do
-    """
+    mock_request("""
     <fsapiResponse>
     <status>FS_OK</status>
     <item key="0">
@@ -168,8 +160,7 @@ defmodule ExFrontier.ConnectorTest do
     </item>
     <listend/>
     </fsapiResponse>
-    """
-    |> mock_request()
+    """)
 
     response = Connector.handle_list(conn, "netRemote.nav.list")
 

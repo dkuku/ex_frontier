@@ -1,4 +1,5 @@
 defmodule ExFrontier.Constants do
+  @moduledoc false
   @play_control %{
     init: 0,
     play: 1,
@@ -196,9 +197,9 @@ defmodule ExFrontier.Constants do
   @get @play_current ++
          @play_info ++ @audio ++ @info ++ @nav ++ @wired ++ @ipconfig ++ @clock ++ @wlan
 
-  def get(), do: @get
-  def set(), do: @set
-  def list(), do: @list
+  def get, do: @get
+  def set, do: @set
+  def list, do: @list
   def play_current, do: @play_current
   def play_info, do: @play_info
   def audio, do: @audio

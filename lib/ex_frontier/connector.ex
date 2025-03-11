@@ -1,7 +1,10 @@
 defmodule ExFrontier.Connector do
+  @moduledoc false
   use Tesla
-  require Logger
+
   alias ExFrontier.Parser
+
+  require Logger
 
   def connect do
     case get(hostname()) do
@@ -31,8 +34,9 @@ defmodule ExFrontier.Connector do
   end
 
   def handle_list(conn, item, from \\ -1, items \\ 100) do
-    with response <- call(conn, "LIST_GET_NEXT/#{item}/#{from}", maxItems: items),
-         :ok <- Parser.get_response_status(response),
+    response = call(conn, "LIST_GET_NEXT/#{item}/#{from}", maxItems: items)
+
+    with :ok <- Parser.get_response_status(response),
          {:ok, list} <- Parser.parse_list(response) do
       list
     else
@@ -41,8 +45,9 @@ defmodule ExFrontier.Connector do
   end
 
   def handle_get(conn, item) do
-    with response <- call(conn, "GET/#{item}"),
-         :ok <- Parser.get_response_status(response),
+    response = call(conn, "GET/#{item}")
+
+    with :ok <- Parser.get_response_status(response),
          type = Parser.get_response_type(response),
          {:ok, raw_value} <- Parser.parse_response(response) do
       Parser.postprocess_response(raw_value, type, item)
@@ -113,15 +118,15 @@ defmodule ExFrontier.Connector do
     end
   end
 
-  defp pin() do
+  defp pin do
     get_config(:pin)
   end
 
-  defp hostname() do
+  defp hostname do
     "http://#{get_config(:hostname)}:#{get_config(:port)}/#{get_config(:path)}"
   end
 
-  defp max_get_multiple_count() do
+  defp max_get_multiple_count do
     get_config(:max_get_multiple_count)
   end
 

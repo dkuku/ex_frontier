@@ -7,8 +7,8 @@ defmodule ExFrontier do
 
   Library is mostly based on sniffing traffic from the android app and also on some documentation found on the internet
   """
-  alias ExFrontier.Constants
   alias ExFrontier.Connector
+  alias ExFrontier.Constants
 
   @doc """
   creates a connection that needs to be passed to every request

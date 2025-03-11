@@ -6,10 +6,6 @@
 
 # General application configuration
 import Config
-config :tesla, adapter: Tesla.Adapter.Hackney
-
-# Configures Elixir's Logger
-config :logger, :console, format: "$time $metadata[$level] $message\n"
 
 config :ex_frontier,
   hostname: "192.168.1.151",
@@ -17,6 +13,11 @@ config :ex_frontier,
   path: "device",
   pin: 1234,
   port: "80"
+
+# Configures Elixir's Logger
+config :logger, :console, format: "$time $metadata[$level] $message\n"
+
+config :tesla, adapter: Tesla.Adapter.Hackney
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
